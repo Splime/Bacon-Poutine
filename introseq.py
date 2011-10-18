@@ -9,7 +9,7 @@ class IntroSeq():
         self.screen = scr
         self.intro0 = pygame.image.load("img/intro0.png").convert()
     
-    def update(self):
+    def update(self, msPassed):
         pass
         
     def draw(self):

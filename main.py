@@ -47,7 +47,7 @@ class Main():
                 pygame.display.flip()
             elif self.state == Main.INTRO and self.intro != None:
                 self.handle_events()
-                self.intro.update()
+                self.intro.update(self.msPassed)
                 self.intro.draw()
                 pygame.display.flip()
             elif self.state == Main.IN_GAME:
