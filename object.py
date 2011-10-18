@@ -1,9 +1,6 @@
 #Object class
 
 import pygame
-import sys
-from introseq import IntroSeq
-
 
 class Object:
     location = ""
@@ -23,3 +20,13 @@ class Object:
         self.width = width
         self.height = height
         self.rect.center = (self.x,self.y)
+    
+    def moveToward(self,xPos,yPos):
+        self.x = xPos
+        self.y = yPos
+        self.rect.center = (self.x,self.y)
+    
+    def imageTransform(self,imgLocation):
+        self.location = imgLocation
+        self.img = pygame.image.load(imageLocation).convert()
+        

@@ -4,6 +4,7 @@ import pygame
 import sys
 from introseq import IntroSeq
 import object
+from map import Map
 
 class Main():
     """Driver Class/Main Menu"""
@@ -29,9 +30,10 @@ class Main():
         pygame.display.set_caption(self.windowName)
         pygame.mouse.set_visible(True)
         #Main Menu Stuff
-        self.dudeObj = object.Object("img/dude.png",200,200,64,128)
+        self.dudeObj = object.Object("img/dude.png",self.windowX/2,self.windowY/2,64,128)
         self.buttonObj = object.Object("img/buttons/play.png",self.windowX/2, self.windowY/2+200,192,64)
-        self.menuBG = pygame.image.load("img/menu_bg.png").convert()
+        #self.menuBGObj = object.Object("img/menu_bg.png",0,0,self.windowX, self.windowY)
+        #self.map = Map("img/largeback.jpg",7833,2209,4,0,0)
         self.intro = None
     
     def run(self):
@@ -68,11 +70,20 @@ class Main():
                 if event.key == pygame.K_ESCAPE:
                     self.exit_game()
             #Mouse Events
-            elif event.type == pygame.MOUSEBUTTONUP:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 if self.buttonObj.rect.collidepoint(event.pos):
                     print "I is playing!"
                     self.state = Main.INTRO
-                    self.intro = IntroSeq(self.screen)                  
+                    self.intro = IntroSeq(self.screen)
+                """
+                else:
+                    if self.map.x - (self.dudeObj.x-event.pos[0]) > 0 and self.map.x - (self.dudeObj.x-event.pos[0]) < self.map.width-self.windowX:
+                        self.map.rect = self.map.rect.move(self.dudeObj.x-event.pos[0],0)
+                        self.map.x -= self.dudeObj.x-event.pos[0]
+                    if self.map.y - (self.dudeObj.y-event.pos[1]) > 0 and self.map.y - (self.dudeObj.y-event.pos[1]) < self.map.height-self.windowY:
+                        self.map.rect = self.map.rect.move(0,self.dudeObj.y-event.pos[1])
+                        self.map.y -= self.dudeObj.y-event.pos[1]
+                """
             
     def update(self):
         """Updates the menu every frame"""
@@ -80,7 +91,8 @@ class Main():
         
     def draw(self):
         """Deals with drawing the menu stuff every frame"""
-        self.screen.blit(self.menuBG, pygame.Rect(0, 0, self.windowX, self.windowY))
+        #self.screen.blit(self.menuBGObj.img, pygame.Rect(0,0,100,100))
+        #self.screen.blit(self.map.img,self.map.rect)
         #Buttons
         self.screen.blit(self.buttonObj.img, self.buttonObj.rect)
         self.screen.blit(self.dudeObj.img,self.dudeObj.rect)
