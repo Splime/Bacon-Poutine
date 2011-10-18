@@ -6,7 +6,7 @@ import datetime
 
 class Game():
     
-    def __init__(self, scr):
+    def __init__(self, scr, toLoad):
         self.screen = scr
         self.windowX = self.screen.get_width()
         self.windowY = self.screen.get_height()
@@ -29,7 +29,9 @@ class Game():
         
     def update(self, msPassed):
         #Do something with the time:
-        self.currTime = datetime.datetime.now() #FILLER!
+        self.timeRatio = 60
+        timeDiff = datetime.timedelta(microseconds = self.timeRatio * msPassed * 1000)
+        self.currTime = self.currTime + timeDiff        
     
     def draw(self):
         self.screen.blit(self.gameBG, pygame.Rect(0, 0, self.windowX, self.windowY))
@@ -66,11 +68,5 @@ class Game():
             leStr += "0%i"%mins
         else:
             leStr += "%i"%mins
-        leStr += ":"
-        secs = self.currTime.second
-        if secs < 10:
-            leStr += "0%i"%secs
-        else:
-            leStr += "%i"%secs
         return leStr
     

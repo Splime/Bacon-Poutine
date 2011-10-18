@@ -55,7 +55,7 @@ class Main():
                 if self.intro.doneYet:
                     print "Intro Complete!"
                     self.state = Main.IN_GAME
-                    self.game = Game(self.screen)
+                    self.game = Game(self.screen, None)
             elif self.state == Main.IN_GAME and self.game != None:
                 self.game.handle_events()
                 self.game.update(self.msPassed)
