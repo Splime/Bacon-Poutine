@@ -3,6 +3,7 @@
 import pygame
 import sys
 from introseq import IntroSeq
+from game import Game
 import object
 
 class Main():
@@ -33,6 +34,7 @@ class Main():
         self.buttonObj = object.Object("img/buttons/play.png",self.windowX/2, self.windowY/2+200,192,64)
         self.menuBG = pygame.image.load("img/menu_bg.png").convert()
         self.intro = None
+        self.game = None
     
     def run(self):
         """Runs the game"""
@@ -53,9 +55,12 @@ class Main():
                 if self.intro.doneYet:
                     print "Intro Complete!"
                     self.state = Main.IN_GAME
-            elif self.state == Main.IN_GAME:
-                print "Error: Game not yet implemented!"
-                self.state = Main.MAIN_MENU
+                    self.game = Game(self.screen)
+            elif self.state == Main.IN_GAME and self.game != None:
+                self.game.handle_events()
+                self.game.update(self.msPassed)
+                self.game.draw()
+                pygame.display.flip()
             else:
                 #Quit!
                 self.exit_game()
