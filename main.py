@@ -25,8 +25,14 @@ class Main():
         self.screen = pygame.display.set_mode((self.windowX, self.windowY))
         pygame.display.set_caption(self.windowName)
         pygame.mouse.set_visible(True)
+        #Main Menu Stuff
+        self.menuBG = pygame.image.load("img/menu_bg.png").convert()
+        self.playButtonImg = pygame.image.load("img/buttons/play.png").convert()
+        self.playButtonRect = self.playButtonImg.get_rect()
+        self.playButtonRect.center = (self.windowX/2, self.windowY/2)
     
     def run(self):
+        """Runs the game"""
         self.state = Main.MAIN_MENU
         self.clock.tick()
         while True:
@@ -43,20 +49,28 @@ class Main():
             self.msPassed = self.clock.tick(60)
     
     def handle_events(self):
+        """Handles all of the input (for main menu)"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.exit_game() #If close button clicked in top right
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.exit_game()
+            #Mouse Events
+            #TODO
             
     def update(self):
+        """Updates the menu every frame"""
         pass
         
     def draw(self):
-        pass
+        """Deals with drawing the menu stuff every frame"""
+        self.screen.blit(self.menuBG, pygame.Rect(0, 0, self.windowX, self.windowY))
+        #Buttons
+        self.screen.blit(self.playButtonImg, self.playButtonRect)
     
     def exit_game(self):
+        """Exits the game completely"""
         pygame.quit()
         sys.exit()
         
