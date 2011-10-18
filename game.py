@@ -18,6 +18,7 @@ class Game():
         #Set up the time
         self.startTime = datetime.datetime.now()
         self.currTime = self.startTime
+        self.timeRatio = 60
     
     def handle_events(self):
         for event in pygame.event.get():
@@ -29,7 +30,6 @@ class Game():
         
     def update(self, msPassed):
         #Do something with the time:
-        self.timeRatio = 60
         timeDiff = datetime.timedelta(microseconds = self.timeRatio * msPassed * 1000)
         self.currTime = self.currTime + timeDiff        
     
