@@ -50,6 +50,9 @@ class Main():
                 self.intro.update(self.msPassed)
                 self.intro.draw()
                 pygame.display.flip()
+                if self.intro.doneYet:
+                    print "Intro Complete!"
+                    self.state = Main.IN_GAME
             elif self.state == Main.IN_GAME:
                 print "Error: Game not yet implemented!"
                 self.state = Main.MAIN_MENU
