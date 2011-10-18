@@ -61,7 +61,6 @@ class Game():
     #Copied from main.py D:
     def exit_game(self):
         """Exits the game completely"""
-        print "Exiting Game"
         pygame.quit()
         sys.exit()
     

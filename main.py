@@ -32,7 +32,8 @@ class Main():
         pygame.mouse.set_visible(True)
         #Main Menu Stuff
         self.dudeObj = Object("img/dude.png",200,200,64,128)
-        self.buttonObj = ClickableButton("img/buttons/default.png",self.windowX/2, self.windowY/2+200,192,64)
+        self.newButtonObj = ClickableButton("img/buttons/new_game.png",self.windowX/2, self.windowY/2+200,192,64)
+        self.loadButtonObj = ClickableButton("img/buttons/load_game.png",self.windowX/2, self.windowY/2+272,192,64)
         self.menuBG = pygame.image.load("img/menu_bg.png").convert()
         self.intro = None
         self.game = None
@@ -78,11 +79,14 @@ class Main():
                     self.exit_game()
             #Mouse Events
             elif event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
-                toPlay = self.buttonObj.mouse_event(event)
-                if toPlay:
-                    print "I is playing!"
+                newGame = self.newButtonObj.mouse_event(event)
+                if newGame:
                     self.state = Main.INTRO
                     self.intro = IntroSeq(self.screen)
+                loadGame = self.loadButtonObj.mouse_event(event)
+                if loadGame:
+                    self.state = Main.IN_GAME
+                    self.game = Game(self.screen, "save.txt")
             
     def update(self):
         """Updates the menu every frame"""
@@ -92,12 +96,12 @@ class Main():
         """Deals with drawing the menu stuff every frame"""
         self.screen.blit(self.menuBG, pygame.Rect(0, 0, self.windowX, self.windowY))
         #Buttons
-        self.buttonObj.draw(self.screen)
+        self.newButtonObj.draw(self.screen)
+        self.loadButtonObj.draw(self.screen)
         self.screen.blit(self.dudeObj.img,self.dudeObj.rect)
     
     def exit_game(self):
         """Exits the game completely"""
-        print "Exiting Game"
         pygame.quit()
         sys.exit()
         
