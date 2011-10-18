@@ -2,6 +2,7 @@
 
 import pygame
 import sys
+from introseq import IntroSeq
 
 class Main():
     """Driver Class/Main Menu"""
@@ -9,7 +10,8 @@ class Main():
     #Possible screens we're at:
     NONE = 0
     MAIN_MENU = 1
-    IN_GAME = 2
+    INTRO = 2
+    IN_GAME = 3
     #Add more as we add them (though these screens may have subscreens)
     
     def __init__(self):
@@ -30,6 +32,7 @@ class Main():
         self.playButtonImg = pygame.image.load("img/buttons/play.png").convert()
         self.playButtonRect = self.playButtonImg.get_rect()
         self.playButtonRect.center = (self.windowX/2, self.windowY/2)
+        self.intro = None
     
     def run(self):
         """Runs the game"""
@@ -42,6 +45,14 @@ class Main():
                 self.update()
                 self.draw()
                 pygame.display.flip()
+            elif self.state == Main.INTRO and self.intro != None:
+                self.handle_events()
+                self.intro.update()
+                self.intro.draw()
+                pygame.display.flip()
+            elif self.state == Main.IN_GAME:
+                print "Error: Game not yet implemented!"
+                self.state = Main.MAIN_MENU
             else:
                 #Quit!
                 self.exit_game()
@@ -57,7 +68,11 @@ class Main():
                 if event.key == pygame.K_ESCAPE:
                     self.exit_game()
             #Mouse Events
-            #TODO
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if self.playButtonRect.collidepoint(event.pos):
+                    print "I is playing!"
+                    self.state = Main.INTRO
+                    self.intro = IntroSeq(self.screen)                  
             
     def update(self):
         """Updates the menu every frame"""
@@ -71,6 +86,7 @@ class Main():
     
     def exit_game(self):
         """Exits the game completely"""
+        print "Exiting Game"
         pygame.quit()
         sys.exit()
         
