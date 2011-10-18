@@ -3,6 +3,7 @@
 import pygame
 import sys
 from introseq import IntroSeq
+import object
 
 class Main():
     """Driver Class/Main Menu"""
@@ -28,10 +29,9 @@ class Main():
         pygame.display.set_caption(self.windowName)
         pygame.mouse.set_visible(True)
         #Main Menu Stuff
+        self.dudeObj = object.Object("img/dude.png",200,200,64,128)
+        self.buttonObj = object.Object("img/buttons/play.png",self.windowX/2, self.windowY/2+200,192,64)
         self.menuBG = pygame.image.load("img/menu_bg.png").convert()
-        self.playButtonImg = pygame.image.load("img/buttons/play.png").convert()
-        self.playButtonRect = self.playButtonImg.get_rect()
-        self.playButtonRect.center = (self.windowX/2, self.windowY/2)
         self.intro = None
     
     def run(self):
@@ -69,7 +69,7 @@ class Main():
                     self.exit_game()
             #Mouse Events
             elif event.type == pygame.MOUSEBUTTONUP:
-                if self.playButtonRect.collidepoint(event.pos):
+                if self.buttonObj.rect.collidepoint(event.pos):
                     print "I is playing!"
                     self.state = Main.INTRO
                     self.intro = IntroSeq(self.screen)                  
@@ -82,7 +82,8 @@ class Main():
         """Deals with drawing the menu stuff every frame"""
         self.screen.blit(self.menuBG, pygame.Rect(0, 0, self.windowX, self.windowY))
         #Buttons
-        self.screen.blit(self.playButtonImg, self.playButtonRect)
+        self.screen.blit(self.buttonObj.img, self.buttonObj.rect)
+        self.screen.blit(self.dudeObj.img,self.dudeObj.rect)
     
     def exit_game(self):
         """Exits the game completely"""
