@@ -10,15 +10,26 @@ class Game():
         self.screen = scr
         self.windowX = self.screen.get_width()
         self.windowY = self.screen.get_height()
-        self.fillerFont = pygame.font.Font(None, 32)
+        self.fillerFont = pygame.font.Font(None, 24)
         self.gameBG = pygame.image.load("img/game_bg.png").convert()
         self.botPanel = pygame.image.load("img/ui/bottom_panel.png").convert()
         self.botPanelRect = self.botPanel.get_rect()
         self.botPanelRect.bottom = self.windowY
+        self.timeRatio = 60
+        #Load or New is important here
+        if toLoad != None:
+            self.loadGame(toLoad)
+        else:
+            self.newGame()
+    
+    def newGame(self):
         #Set up the time
         self.startTime = datetime.datetime.now()
         self.currTime = self.startTime
-        self.timeRatio = 60
+    
+    def loadGame(self, toLoad):
+        print "Loading is not yet enabled! Starting a new game anyway..."
+        self.newGame()
     
     def handle_events(self):
         for event in pygame.event.get():
@@ -42,8 +53,8 @@ class Game():
         timeText2 = self.fillerFont.render("%i/%i/%i"%(self.currTime.month, self.currTime.day, self.currTime.year), 1, (0, 0, 0))
         timeRect1 = timeText1.get_rect()
         timeRect2 = timeText2.get_rect()
-        timeRect1.center = (96, self.windowY - 96)
-        timeRect2.center = (96, self.windowY - 32)
+        timeRect1.center = (32, self.windowY - 96)
+        timeRect2.center = (128, self.windowY - 96)
         self.screen.blit(timeText1, timeRect1)
         self.screen.blit(timeText2, timeRect2)
     
