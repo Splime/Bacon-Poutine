@@ -3,6 +3,7 @@
 import pygame
 import sys
 import datetime
+from clickablebutton import ClickableButton
 
 class Game():
     
@@ -13,14 +14,19 @@ class Game():
         self.fillerFont = pygame.font.Font(None, 24)
         self.gameBG = pygame.image.load("img/game_bg.png").convert()
         self.botPanel = pygame.image.load("img/ui/bottom_panel.png").convert()
+        self.topLeft = pygame.image.load("img/ui/top_left.png").convert_alpha()
         self.botPanelRect = self.botPanel.get_rect()
         self.botPanelRect.bottom = self.windowY
+        self.topLeftRect = self.topLeft.get_rect()
+        self.saveButton = ClickableButton("img/buttons/save80x32.png",self.windowX - 96, self.windowY - 32,80,32)
         self.timeRatio = 60
         #Load or New is important here
         if toLoad != None:
             self.loadGame(toLoad)
+            self.saveName = toLoad
         else:
             self.newGame()
+            self.saveName = "save.txt"
     
     def newGame(self):
         #Set up the time
@@ -63,6 +69,11 @@ class Game():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.exit_game()
+            #Mouse Events
+            elif event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
+                toSave = self.saveButton.mouse_event(event)
+                if toSave:
+                    self.saveGame(self.saveName)
         
     def update(self, msPassed):
         #Do something with the time:
@@ -72,6 +83,8 @@ class Game():
     def draw(self):
         self.screen.blit(self.gameBG, pygame.Rect(0, 0, self.windowX, self.windowY))
         self.screen.blit(self.botPanel, self.botPanelRect)
+        self.screen.blit(self.topLeft, self.topLeftRect)
+        self.saveButton.draw(self.screen)
         #Some code to display the time and date
         timeStr = self.getTimeStr()
         timeText1 = self.fillerFont.render(timeStr, 1, (0, 0, 0))
@@ -86,7 +99,7 @@ class Game():
     #Copied from main.py D:
     def exit_game(self):
         """Exits the game completely"""
-        self.saveGame("save.txt")
+        self.saveGame(self.saveName)
         pygame.quit()
         sys.exit()
     
