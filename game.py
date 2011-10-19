@@ -66,8 +66,9 @@ class Game():
         aLine = f.readline()
         while aLine != "endActions\n":
             #Code goes here to check if an action completed while away from the game
-            #TODO
-            self.actionQueue.append(self.textToAction(aLine))
+            anAction = self.textToAction(aLine)
+            if anAction.isDone(self.currTime) == False
+                self.actionQueue.append(anAction)
             aLine = f.readline()
         #At this point, aLine == "endActions\n"
         
