@@ -17,19 +17,21 @@ class Map:
 		self.height = height
 		self.tempH = height
 		self.tempW = width
-		tempG = []
 		self.t1 = 0
 		self.t2 = 0
 		print "Generating map"
 		while self.tempW >= self.gridSize:
+			self.tempG = []
 			while self.tempH >= self.gridSize:
 				tempSquare = Grid(self.t1,self.t2,self.gridSize,True)
-				print "x,y: ("+ repr(self.tempW)+","+repr(self.tempH)+")"
-				tempG.append(tempSquare)
+				#print "x,y: ("+ repr(self.tempW)+","+repr(self.tempH)+")"
+				self.tempG.append(tempSquare)
 				self.tempH -= self.gridSize
 				self.t2 += self.gridSize
 			self.tempW -= self.gridSize
 			self.t1 += self.gridSize
-			self.grid.append(tempG)
+			self.t2 = 0
+			self.grid.append(self.tempG)
 			self.tempH = height
+			del self.tempG
 		print "Map generated"

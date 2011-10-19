@@ -9,6 +9,9 @@ class Grid:
 	dimension = 0
 	name = ""
 	passable = False
+	state = 0
+	
+	#States 0 = passable, 1 = impassable, 2 = start, 3 = end
 	
 	def __init__(self,x,y,dimension,passable):
 		self.rect = (x,y,dimension,dimension)
@@ -16,3 +19,13 @@ class Grid:
 		self.y = y
 		self.dimension = dimension
 		self.passable = passable
+	
+	def toggle(self,x):
+		if x > 0:
+			self.state +=1
+			if self.state == 4:
+				self.state = 0
+		if x < 0:
+			self.state -=1
+			if self.state == -1:
+				self.state = 3
