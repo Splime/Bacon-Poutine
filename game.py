@@ -28,8 +28,33 @@ class Game():
         self.currTime = self.startTime
     
     def loadGame(self, toLoad):
-        print "Loading is not yet enabled! Starting a new game anyway..."
-        self.newGame()
+        print "Loading game from %s..."%toLoad
+        f = open(toLoad, 'r')
+        prevGameTimeLine = f.readline()
+        if prevGameTimeLine == '':
+            print "No File Found!"
+            self.newGame()
+            return
+        prevSaveTimeLine = f.readline()
+        #Maybe more error checking here?
+        #Now split them strings! (And convert to datetimes)
+        prevGameTimeList = prevGameTimeLine.rstrip().split(',')
+        prevSaveTimeList = prevSaveTimeLine.rstrip().split(',')
+        prevGameTime = datetime.datetime(int(prevGameTimeList[1]), int(prevGameTimeList[2]), int(prevGameTimeList[3]), int(prevGameTimeList[4]), int(prevGameTimeList[5]), int(prevGameTimeList[6]))
+        prevSaveTime = datetime.datetime(int(prevSaveTimeList[1]), int(prevSaveTimeList[2]), int(prevSaveTimeList[3]), int(prevSaveTimeList[4]), int(prevSaveTimeList[5]), int(prevSaveTimeList[6]))
+        #Calculate the new game time!
+        saveTimeDiff = datetime.datetime.now() - prevSaveTime
+        gameTimeDiff = saveTimeDiff * self.timeRatio
+        self.currTime = prevGameTime + gameTimeDiff
+        
+    def saveGame(self, saveDest):
+        print "Saving game to %s..."%saveDest
+        f = open(saveDest, 'w')
+        f.write("gametime,%i,%i,%i,%i,%i,%i\n"%(self.currTime.year, self.currTime.month, self.currTime.day, self.currTime.hour, self.currTime.minute, self.currTime.second))
+        irlTime = datetime.datetime.now()
+        f.write("savetime,%i,%i,%i,%i,%i,%i\n"%(irlTime.year, irlTime.month, irlTime.day, irlTime.hour, irlTime.minute, irlTime.second))
+        f.close()
+        print "Save complete!"
     
     def handle_events(self):
         for event in pygame.event.get():
@@ -61,6 +86,7 @@ class Game():
     #Copied from main.py D:
     def exit_game(self):
         """Exits the game completely"""
+        self.saveGame("save.txt")
         pygame.quit()
         sys.exit()
     
