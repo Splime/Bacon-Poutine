@@ -1,8 +1,8 @@
-#Grid class
+#Node class
 
 import pygame
 
-class Grid:
+class Node:
 	x = 0
 	y = 0
 	rect = 0
