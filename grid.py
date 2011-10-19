@@ -10,6 +10,9 @@ class Node:
 	name = ""
 	passable = False
 	state = 0
+	G = 0
+	F = 0
+	H = 0
 	
 	#States 0 = passable, 1 = impassable, 2 = start, 3 = end
 	
