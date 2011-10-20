@@ -1,12 +1,13 @@
 #game.py: A class to handle the actual game stuff
 
-#NOTE: To Do: keep track of actions (i.e. removed when done) and display them
-
 import pygame
 import sys
 import datetime
 from clickablebutton import ClickableButton
 from action import Action
+from map import Map
+from grid import Node
+from aStar import AStar
 
 class Game():
     
@@ -31,6 +32,24 @@ class Game():
         else:
             self.newGame()
             self.saveName = "save.txt"
+        #Guess what? It's a map, bitch
+        self.startBlock = Node(0,0,0,0)
+        self.endBlock = Node(0,0,0,0)
+        self.map = Map(640,640,32)
+        self.open = pygame.image.load("img/test/open.jpg").convert()
+        self.closed = pygame.image.load("img/test/closed.jpg").convert()
+        self.start = pygame.image.load("img/test/start.jpg").convert()
+        self.end = pygame.image.load("img/test/end.jpg").convert()
+        self.path = pygame.image.load("img/test/path.jpg").convert()
+    
+    #More Map code
+    def swap(self,setSpecial,x):
+        if x > 0: #change start
+            self.startBlock.state = 0
+            self.startBlock = setSpecial
+        if x < 0: #change end
+            self.endBlock.state = 0
+            self.endBlock = setSpecial
     
     def newGame(self):
         #Set up the time
@@ -41,7 +60,6 @@ class Game():
         self.actionQueue.append( Action("testType", "Testing the Action System Again...", self.startTime, datetime.timedelta(minutes=20), None) )
         self.actionQueue.append( Action("testType", "Testing the Action System Yet Again...", self.startTime, datetime.timedelta(minutes=15), None) )
         self.actionQueue.append( Action("testType", "Testing the Action System Againnnnnn...", self.startTime, datetime.timedelta(minutes=30), None) )
-
     
     def loadGame(self, toLoad):
         print "Loading game from %s..."%toLoad
@@ -110,6 +128,43 @@ class Game():
                 toSave = self.saveButton.mouse_event(event)
                 if toSave:
                     self.saveGame(self.saveName)
+            #Map stuff (from test.py)
+            self.map_stuff(event)
+    
+    def map_stuff(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse = pygame.mouse.get_pressed()
+            if mouse[0]:
+                if event.pos[0] <640 and event.pos[0] >= 0 and event.pos[1]<640 and event.pos[1]>=0:
+                    x = int(event.pos[0]/32)
+                    y = int(event.pos[1]/32)
+                    self.map.grid[x][y].toggle(1)
+                    if self.startBlock.x == self.map.grid[x][y].x and self.startBlock.y == self.map.grid[x][y].y:
+                        self.startBlock = Node(0,0,0,0)
+                    if self.endBlock.x == self.map.grid[x][y].x and self.endBlock.y == self.map.grid[x][y].y:
+                        self.endBlock = Node(0,0,0,0)
+                    if self.map.grid[x][y].state == 2:
+                        self.swap(self.map.grid[x][y],1)
+                    if self.map.grid[x][y].state ==3:
+                        self.swap(self.map.grid[x][y],-1)
+            if mouse[2]:
+                if event.pos[0] <640 and event.pos[0] >= 0 and event.pos[1]<640 and event.pos[1]>=0:
+                    x = int(event.pos[0]/32)
+                    y = int(event.pos[1]/32)
+                    self.map.grid[x][y].toggle(-1)
+                    if self.startBlock.x == self.map.grid[x][y].x and self.startBlock.y == self.map.grid[x][y].y:
+                        self.startBlock = Node(0,0,0,0)
+                    if self.endBlock.x == self.map.grid[x][y].x and self.endBlock.y == self.map.grid[x][y].y:
+                        self.endBlock = Node(0,0,0,0)
+                    if self.map.grid[x][y].state == 2:
+                        self.swap(self.map.grid[x][y],1)
+                    if self.map.grid[x][y].state ==3:
+                        self.swap(self.map.grid[x][y],-1)
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                path = AStar(self.map,self.startBlock,self.endBlock)
+                for node in path.pathList:
+                    node.state = 4
         
     def update(self, msPassed):
         #Do something with the time:
@@ -149,7 +204,20 @@ class Game():
             txtRect.center = (512, self.windowY - 96 + 32*index)
             self.screen.blit(txtSurf, txtRect)
             counter += 1
-            
+        #Whattup, it's a map!
+        for x in self.map.grid:
+            for y in x:
+                #print "x,y: ("+ repr(y.x)+","+repr(y.y)+")"
+                if y.state ==0:
+                    self.screen.blit(self.open,y.rect)
+                elif y.state == 1:
+                    self.screen.blit(self.closed,y.rect)
+                elif y.state ==2 :
+                    self.screen.blit(self.start,y.rect)
+                elif y.state == 3:
+                    self.screen.blit(self.end,y.rect)
+                elif y.state == 4:
+                    self.screen.blit(self.path,y.rect)
     
     #Copied from main.py D:
     def exit_game(self):
