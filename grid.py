@@ -15,7 +15,7 @@ class Node:
 	H = 0
 	parent = [0,0]
 	
-	#States 0 = passable, 1 = impassable, 2 = start, 3 = end
+	#States 0 = passable, 1 = impassable, 2 = start, 3 = end 4 = path
 	
 	def __init__(self,x,y,dimension,passable):
 		self.rect = (x,y,dimension,dimension)
@@ -27,9 +27,9 @@ class Node:
 	def toggle(self,x):
 		if x > 0:
 			self.state +=1
-			if self.state == 4:
+			if self.state == 5:
 				self.state = 0
 		if x < 0:
 			self.state -=1
 			if self.state == -1:
-				self.state = 3
+				self.state = 4
