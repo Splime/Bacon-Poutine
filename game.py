@@ -37,7 +37,7 @@ class Game():
         self.startTime = datetime.datetime.now()
         self.currTime = self.startTime
         #Add a test action
-        self.actionQueue.append( Action("testType", "Testing the Action System...", self.startTime, datetime.timedelta(hours=1), None) )
+        self.actionQueue.append( Action("testType", "Testing the Action System...", self.startTime, datetime.timedelta(minutes=10), None) )
     
     def loadGame(self, toLoad):
         print "Loading game from %s..."%toLoad
@@ -67,7 +67,7 @@ class Game():
         while aLine != "endActions\n":
             #Code goes here to check if an action completed while away from the game
             anAction = self.textToAction(aLine)
-            if anAction.isDone(self.currTime) == False
+            if anAction.isDone(self.currTime) == False:
                 self.actionQueue.append(anAction)
             aLine = f.readline()
         #At this point, aLine == "endActions\n"
@@ -110,7 +110,12 @@ class Game():
     def update(self, msPassed):
         #Do something with the time:
         timeDiff = datetime.timedelta(microseconds = self.timeRatio * msPassed * 1000)
-        self.currTime = self.currTime + timeDiff        
+        self.currTime = self.currTime + timeDiff
+        #Check if any actions have finished
+        for act in self.actionQueue:
+            if act.isDone(self.currTime):
+                print "Removing an event"
+                self.actionQueue.remove(act)
     
     def draw(self):
         self.screen.blit(self.gameBG, pygame.Rect(0, 0, self.windowX, self.windowY))
