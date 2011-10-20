@@ -29,6 +29,8 @@ class Main():
         #Get the screen going
         self.screen = pygame.display.set_mode((self.windowX, self.windowY))
         pygame.display.set_caption(self.windowName)
+        self.iconImg = pygame.image.load("img/icon.png").convert_alpha()
+        pygame.display.set_icon(self.iconImg)
         pygame.mouse.set_visible(True)
         #Main Menu Stuff
         self.dudeObj = Object("img/dude.png",200,200,64,128)

@@ -1,4 +1,4 @@
-gametime,2011,10,19,23,42,46
-savetime,2011,10,19,23,28,8
+gametime,2011,10,20,0,37,41
+savetime,2011,10,20,0,5,55
 actions:
 endActions

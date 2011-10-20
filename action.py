@@ -15,3 +15,10 @@ class Action:
         
     def isDone(self, currTime):
         return self.startTime + self.duration <= currTime
+    
+    def isStarted(self, currTime):
+        return self.startTime < currTime
+        
+    def timeRemaining(self, currTime):
+        return (self.startTime + self.duration) - currTime
+        
