@@ -1,5 +1,4 @@
-gametime,2011,10,19,1,42,43
-savetime,2011,10,19,0,53,20
+gametime,2011,10,19,23,42,46
+savetime,2011,10,19,23,28,8
 actions:
-testType^Testing the Action System...^actStart,2011,10,19,0,52,31^actDuration,0,3600,0^None
 endActions
