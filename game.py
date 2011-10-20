@@ -36,8 +36,12 @@ class Game():
         #Set up the time
         self.startTime = datetime.datetime.now()
         self.currTime = self.startTime
-        #Add a test action
+        #Add test actions
         self.actionQueue.append( Action("testType", "Testing the Action System...", self.startTime, datetime.timedelta(minutes=10), None) )
+        self.actionQueue.append( Action("testType", "Testing the Action System Again...", self.startTime, datetime.timedelta(minutes=20), None) )
+        self.actionQueue.append( Action("testType", "Testing the Action System Yet Again...", self.startTime, datetime.timedelta(minutes=15), None) )
+        self.actionQueue.append( Action("testType", "Testing the Action System Againnnnnn...", self.startTime, datetime.timedelta(minutes=30), None) )
+
     
     def loadGame(self, toLoad):
         print "Loading game from %s..."%toLoad
@@ -123,7 +127,7 @@ class Game():
         self.screen.blit(self.topLeft, self.topLeftRect)
         self.saveButton.draw(self.screen)
         #Some code to display the time and date
-        timeStr = self.getTimeStr()
+        timeStr = self.getTimeStr(self.currTime)
         timeText1 = self.fillerFont.render(timeStr, 1, (0, 0, 0))
         timeText2 = self.fillerFont.render("%i/%i/%i"%(self.currTime.month, self.currTime.day, self.currTime.year), 1, (0, 0, 0))
         timeRect1 = timeText1.get_rect()
@@ -132,6 +136,20 @@ class Game():
         timeRect2.center = (128, self.windowY - 96)
         self.screen.blit(timeText1, timeRect1)
         self.screen.blit(timeText2, timeRect2)
+        #A quick display for the actions we have (active ones only)
+        counter = 0
+        for index, act in enumerate(self.actionQueue):
+            if counter >= 3:
+                break
+            if act.isStarted(self.currTime) == False:
+                continue
+            actStr = "%s : %s to go"%(act.desc, self.getDeltaStr(act.timeRemaining(self.currTime)))
+            txtSurf = self.fillerFont.render(actStr, 1, (0, 0, 0))
+            txtRect = txtSurf.get_rect()
+            txtRect.center = (512, self.windowY - 96 + 32*index)
+            self.screen.blit(txtSurf, txtRect)
+            counter += 1
+            
     
     #Copied from main.py D:
     def exit_game(self):
@@ -141,19 +159,35 @@ class Game():
         sys.exit()
     
     #Here Lie the Helper Functions:
-    def getTimeStr(self):
+    def getTimeStr(self, aTime):
         leStr = ""
-        hours = self.currTime.hour
+        hours = aTime.hour
         if hours < 10:
             leStr += "0%i"%hours
         else:
             leStr += "%i"%hours
         leStr += ":"
-        mins = self.currTime.minute
+        mins = aTime.minute
         if mins < 10:
             leStr += "0%i"%mins
         else:
             leStr += "%i"%mins
+        return leStr
+        
+    def getDeltaStr(self, dt):
+        leStr = ""
+        if dt.days > 0:
+            leStr += "%i days,"%dt.days
+        if dt.seconds/3600 > 0:
+            leStr += "%i:"%(dt.seconds/3600)
+        else:
+            leStr += "0:"
+        if dt.seconds/60 > 10:
+            leStr += "%i"%(dt.seconds/60)
+        elif dt.seconds/60 > 0:
+            leStr += "0%i"%(dt.seconds/60)
+        else:
+            leStr += "00"
         return leStr
     
     def textToDateTime(self, text): #For loading datetimes
