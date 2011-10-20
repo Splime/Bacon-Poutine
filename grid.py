@@ -13,6 +13,7 @@ class Node:
 	G = 0
 	F = 0
 	H = 0
+	parent = [0,0]
 	
 	#States 0 = passable, 1 = impassable, 2 = start, 3 = end
 	

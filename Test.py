@@ -5,6 +5,7 @@ from map import Map
 import sys
 from math import floor
 from grid import Node
+from aStar import AStar
 
 class Test():
 	def __init__(self):
@@ -82,7 +83,7 @@ class Test():
 							self.swap(self.map.grid[x][y],-1)
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_SPACE:
-					self.path_find(self.startBlock,self.endBlock)
+					temp = AStar(self.map,self.startBlock,self.endBlock)
 	
 	def update(self):
 		pass
