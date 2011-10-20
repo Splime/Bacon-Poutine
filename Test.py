@@ -26,6 +26,7 @@ class Test():
 		self.closed = pygame.image.load("img/test/closed.jpg").convert()
 		self.start = pygame.image.load("img/test/start.jpg").convert()
 		self.end = pygame.image.load("img/test/end.jpg").convert()
+		self.path = pygame.image.load("img/test/path.jpg").convert()
 		
 	def run(self):
 		self.clock.tick()
@@ -83,7 +84,9 @@ class Test():
 							self.swap(self.map.grid[x][y],-1)
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_SPACE:
-					temp = AStar(self.map,self.startBlock,self.endBlock)
+					path = AStar(self.map,self.startBlock,self.endBlock)
+					for node in path.pathList:
+						node.state = 4
 	
 	def update(self):
 		pass
@@ -100,6 +103,8 @@ class Test():
 					self.screen.blit(self.start,y.rect)
 				elif y.state == 3:
 					self.screen.blit(self.end,y.rect)
+				elif y.state == 4:
+					self.screen.blit(self.path,y.rect)
 
 
 	def exit_game(self):
