@@ -8,21 +8,25 @@ from action import Action
 from map import Map
 from grid import Node
 from aStar import AStar
+from object import Object
 
 class Game():
+
+    NORMAL = 0
+    POP_UP_MENU = 1
     
     def __init__(self, scr, toLoad):
+        self.state = Game.NORMAL
         self.screen = scr
         self.windowX = self.screen.get_width()
         self.windowY = self.screen.get_height()
         self.fillerFont = pygame.font.Font(None, 24)
-        self.gameBG = pygame.image.load("img/game_bg.png").convert()
-        self.botPanel = pygame.image.load("img/ui/bottom_panel.png").convert()
-        self.topLeft = pygame.image.load("img/ui/top_left.png").convert_alpha()
-        self.botPanelRect = self.botPanel.get_rect()
-        self.botPanelRect.bottom = self.windowY
-        self.topLeftRect = self.topLeft.get_rect()
-        self.saveButton = ClickableButton("img/buttons/save80x32.png",self.windowX - 96, self.windowY - 32,80,32)
+        self.gameBG = pygame.image.load("img/game_bg.png")
+        self.botPanel = Object("img/ui/bottom_panel.png",512,self.windowY-64,1024,128)
+        self.topLeft = Object("img/ui/top_left.png", 256,64,512,128)
+        self.menuPanel = Object("img/ui/menu.png",self.windowX/2, self.windowY/2, 212,274)
+        self.saveButton = ClickableButton("img/buttons/save80x32.png",self.windowX - 96, self.windowY - 64,80,32)
+        self.closeButton = ClickableButton("img/buttons/close.png", self.menuPanel.rect.right-13, self.menuPanel.rect.top+13,17,17)
         self.timeRatio = 60
         self.actionQueue = []
         #Load or New is important here
@@ -120,16 +124,36 @@ class Game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.exit_game()
+                #TODO: Activate the menu instead
+                
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.exit_game()
+                    self.toggle_menu()
+                if event.key == pygame.K_F5:
+                    print "Quicksaving..."
+                    self.saveGame(self.saveName)
             #Mouse Events
-            elif event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
+            elif self.state == Game.NORMAL and(event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION):
                 toSave = self.saveButton.mouse_event(event)
                 if toSave:
                     self.saveGame(self.saveName)
+            elif self.state == Game.POP_UP_MENU and(event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION):
+                toClose = self.closeButton.mouse_event(event)
+                if toClose:
+                    self.toggle_menu()
             #Map stuff (from test.py)
-            self.map_stuff(event)
+            if self.state == Game.NORMAL:
+                self.map_stuff(event)
+    
+    def toggle_menu(self):
+        """Activates a menu pop-up for saving/quitting"""
+        #If the pop up is already on, deactivate
+        if self.state == Game.POP_UP_MENU:
+            self.state = Game.NORMAL
+            print "Menu Off"
+        else:
+            self.state = Game.POP_UP_MENU
+            print "Menu On"
     
     def map_stuff(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -178,8 +202,23 @@ class Game():
     
     def draw(self):
         self.screen.blit(self.gameBG, pygame.Rect(0, 0, self.windowX, self.windowY))
-        self.screen.blit(self.botPanel, self.botPanelRect)
-        self.screen.blit(self.topLeft, self.topLeftRect)
+        #Whattup, it's a map!
+        for x in self.map.grid:
+            for y in x:
+                #print "x,y: ("+ repr(y.x)+","+repr(y.y)+")"
+                if y.state ==0:
+                    self.screen.blit(self.open,y.rect)
+                elif y.state == 1:
+                    self.screen.blit(self.closed,y.rect)
+                elif y.state ==2 :
+                    self.screen.blit(self.start,y.rect)
+                elif y.state == 3:
+                    self.screen.blit(self.end,y.rect)
+                elif y.state == 4:
+                    self.screen.blit(self.path,y.rect)
+        #UI
+        self.botPanel.draw(self.screen)
+        self.topLeft.draw(self.screen)
         self.saveButton.draw(self.screen)
         #Some code to display the time and date
         timeStr = self.getTimeStr(self.currTime)
@@ -204,25 +243,16 @@ class Game():
             txtRect.center = (512, self.windowY - 96 + 32*index)
             self.screen.blit(txtSurf, txtRect)
             counter += 1
-        #Whattup, it's a map!
-        for x in self.map.grid:
-            for y in x:
-                #print "x,y: ("+ repr(y.x)+","+repr(y.y)+")"
-                if y.state ==0:
-                    self.screen.blit(self.open,y.rect)
-                elif y.state == 1:
-                    self.screen.blit(self.closed,y.rect)
-                elif y.state ==2 :
-                    self.screen.blit(self.start,y.rect)
-                elif y.state == 3:
-                    self.screen.blit(self.end,y.rect)
-                elif y.state == 4:
-                    self.screen.blit(self.path,y.rect)
+        #Pop-Up Menu
+        if self.state == Game.POP_UP_MENU:
+            #draw some menu stuff
+            self.menuPanel.draw(self.screen)
+            self.closeButton.draw(self.screen)
     
     #Copied from main.py D:
     def exit_game(self):
         """Exits the game completely"""
-        self.saveGame(self.saveName)
+        #self.saveGame(self.saveName)
         pygame.quit()
         sys.exit()
     
@@ -250,7 +280,7 @@ class Game():
             leStr += "%i:"%(dt.seconds/3600)
         else:
             leStr += "0:"
-        if dt.seconds/60 > 10:
+        if dt.seconds/60 >= 10:
             leStr += "%i"%(dt.seconds/60)
         elif dt.seconds/60 > 0:
             leStr += "0%i"%(dt.seconds/60)

@@ -15,6 +15,7 @@ class ClickableButton(Object):
         Object.__init__(self, imgLocation, xPos, yPos, width, height)
         #Modify the rect to include only one of three states
         self.rect.height = self.rect.height / 3
+        self.rect.center = (xPos, yPos)
         self.subrect = pygame.Rect(0, 0, self.rect.width, self.rect.height)
         self.state = ClickableButton.NORMAL
     
@@ -22,7 +23,7 @@ class ClickableButton(Object):
         """btw, this method should return True if the button activates"""
         if event.type == pygame.MOUSEBUTTONUP:
             if self.rect.collidepoint(event.pos):
-                self.state = ClickableButton.HIGHLIGHT
+                self.state = ClickableButton.NORMAL
                 return True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
