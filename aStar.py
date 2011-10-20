@@ -26,7 +26,7 @@ class AStar():
 		if self.adjacent(self.startNode):
 			pass
 		else:
-			print "No valid path from start(" + repr(self.startNode.x/32) +","+ repr(self.startNode.y/32)+")"
+			print "No valid path from (" + repr(self.startNode.x/32) +","+ repr(self.startNode.y/32)+") to (" + repr(self.endNode.x/32) +","+ repr(self.endNode.y/32)+")"
 			return 0
 		#self.openList.remove(self.startNode)
 		self.closedList.append(self.startNode)
@@ -41,7 +41,7 @@ class AStar():
 			self.openList.remove(self.minNode)
 			while not self.adjacent(self.minNode):
 				if len(self.openList) == 0:
-					print "No valid path from start(" + repr(self.startNode.x/32) +","+ repr(self.startNode.y/32)+")"
+					print "No valid path from (" + repr(self.startNode.x/32) +","+ repr(self.startNode.y/32)+") to (" + repr(self.endNode.x/32) +","+ repr(self.endNode.y/32)+")"
 					return 0
 				else:
 					minF = 999999999
@@ -151,30 +151,32 @@ class AStar():
 							self.map.grid[x+1][y].parent = [x,y]
 						self.map.grid[x+1][y].F = self.map.grid[x+1][y].G + self.map.grid[x+1][y].H
 						boolean = True
-		if self.map.grid[x][y-1].state != 1: #If a passble block
-					if self.closedList.count(self.map.grid[x][y-1]) == 0: #If not in closedList
-						if self.openList.count(self.map.grid[x][y-1]) !=0:#If in openlist
-							if self.map.grid[x][y].G + 14 < self.map.grid[x][y-1].G:#update existing nodes
-								self.map.grid[x][y-1].G + 14
-								self.map.grid[x][y-1].parent = self.map.grid[x][y]
-						else:#New node found
-							self.openList.append(self.map.grid[x][y-1])
-							self.map.grid[x][y-1].G = self.map.grid[x][y].G + 14
-							self.map.grid[x][y-1].H = self.manhattan(self.map.grid[x][y-1])
-							self.map.grid[x][y-1].parent = [x,y]
-						self.map.grid[x][y-1].F = self.map.grid[x][y-1].G + self.map.grid[x][y-1].H
-						boolean = True
-		if self.map.grid[x][y+1].state != 1: #If a passble block
-					if self.closedList.count(self.map.grid[x][y+1]) == 0: #If not in closedList
-						if self.openList.count(self.map.grid[x][y+1]) !=0:#If in openlist
-							if self.map.grid[x][y].G + 14 < self.map.grid[x][y+1].G:#update existing nodes
-								self.map.grid[x][y+1].G + 14
-								self.map.grid[x][y+1].parent = self.map.grid[x][y]
-						else:#New node found
-							self.openList.append(self.map.grid[x][y+1])
-							self.map.grid[x][y+1].G = self.map.grid[x][y].G + 14
-							self.map.grid[x][y+1].H = self.manhattan(self.map.grid[x][y+1])
-							self.map.grid[x][y+1].parent = [x,y]
-						self.map.grid[x][y+1].F = self.map.grid[x][y+1].G + self.map.grid[x][y+1].H
-						boolean = True
+		if y-1 >= 0:
+			if self.map.grid[x][y-1].state != 1: #If a passble block
+						if self.closedList.count(self.map.grid[x][y-1]) == 0: #If not in closedList
+							if self.openList.count(self.map.grid[x][y-1]) !=0:#If in openlist
+								if self.map.grid[x][y].G + 14 < self.map.grid[x][y-1].G:#update existing nodes
+									self.map.grid[x][y-1].G + 14
+									self.map.grid[x][y-1].parent = self.map.grid[x][y]
+							else:#New node found
+								self.openList.append(self.map.grid[x][y-1])
+								self.map.grid[x][y-1].G = self.map.grid[x][y].G + 14
+								self.map.grid[x][y-1].H = self.manhattan(self.map.grid[x][y-1])
+								self.map.grid[x][y-1].parent = [x,y]
+							self.map.grid[x][y-1].F = self.map.grid[x][y-1].G + self.map.grid[x][y-1].H
+							boolean = True
+		if y + 1 <= 19:
+			if self.map.grid[x][y+1].state != 1: #If a passble block
+						if self.closedList.count(self.map.grid[x][y+1]) == 0: #If not in closedList
+							if self.openList.count(self.map.grid[x][y+1]) !=0:#If in openlist
+								if self.map.grid[x][y].G + 14 < self.map.grid[x][y+1].G:#update existing nodes
+									self.map.grid[x][y+1].G + 14
+									self.map.grid[x][y+1].parent = self.map.grid[x][y]
+							else:#New node found
+								self.openList.append(self.map.grid[x][y+1])
+								self.map.grid[x][y+1].G = self.map.grid[x][y].G + 14
+								self.map.grid[x][y+1].H = self.manhattan(self.map.grid[x][y+1])
+								self.map.grid[x][y+1].parent = [x,y]
+							self.map.grid[x][y+1].F = self.map.grid[x][y+1].G + self.map.grid[x][y+1].H
+							boolean = True
 		return boolean
