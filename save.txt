@@ -1,8 +1,7 @@
-gametime,2011,10,20,18,19,39
-savetime,2011,10,20,18,12,1
+gametime,2011,10,20,19,40,37
+savetime,2011,10,20,19,28,18
 actions:
-testType^Testing the Action System...^actStart,2011,10,20,18,11,53^actDuration,0,600,0^None
-testType^Testing the Action System Again...^actStart,2011,10,20,18,11,53^actDuration,0,1200,0^None
-testType^Testing the Action System Yet Again...^actStart,2011,10,20,18,11,53^actDuration,0,900,0^None
-testType^Testing the Action System Againnnnnn...^actStart,2011,10,20,18,11,53^actDuration,0,1800,0^None
+testType^Testing the Action System Again...^actStart,2011,10,20,19,28,5^actDuration,0,1200,0^None
+testType^Testing the Action System Yet Again...^actStart,2011,10,20,19,28,5^actDuration,0,900,0^None
+testType^Testing the Action System Againnnnnn...^actStart,2011,10,20,19,28,5^actDuration,0,1800,0^None
 endActions

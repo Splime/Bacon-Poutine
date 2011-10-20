@@ -12,6 +12,8 @@ from object import Object
 
 class Game():
 
+    QUIT_GAME = -2
+    QUIT_TO_MENU = -1
     NORMAL = 0
     POP_UP_MENU = 1
     
@@ -27,6 +29,9 @@ class Game():
         self.menuPanel = Object("img/ui/menu.png",self.windowX/2, self.windowY/2, 212,274)
         self.saveButton = ClickableButton("img/buttons/save80x32.png",self.windowX - 96, self.windowY - 64,80,32)
         self.closeButton = ClickableButton("img/buttons/close.png", self.menuPanel.rect.right-13, self.menuPanel.rect.top+13,17,17)
+        self.menuSaveButton = ClickableButton("img/buttons/save_game.png", self.menuPanel.x, self.menuPanel.rect.top+88,192,64)
+        self.menuMenuButton = ClickableButton("img/buttons/quit_menu.png", self.menuPanel.x, self.menuPanel.rect.top+160,192,64)
+        self.menuQuitButton = ClickableButton("img/buttons/quit_desktop.png", self.menuPanel.x, self.menuPanel.rect.top+232,192,64)
         self.timeRatio = 60
         self.actionQueue = []
         #Load or New is important here
@@ -66,7 +71,7 @@ class Game():
         self.actionQueue.append( Action("testType", "Testing the Action System Againnnnnn...", self.startTime, datetime.timedelta(minutes=30), None) )
     
     def loadGame(self, toLoad):
-        print "Loading game from %s..."%toLoad
+        #print "Loading game from %s..."%toLoad
         f = open(toLoad, 'r')
         prevGameTimeLine = f.readline()
         if prevGameTimeLine == '':
@@ -103,10 +108,10 @@ class Game():
         
         #End File Stuff
         f.close()
-        print "Load complete!"
+        #print "Load complete!"
         
     def saveGame(self, saveDest):
-        print "Saving game to %s..."%saveDest
+        #print "Saving game to %s..."%saveDest
         f = open(saveDest, 'w')
         f.write("gametime,%s\n"%self.dateTimeToText(self.currTime))
         irlTime = datetime.datetime.now()
@@ -118,14 +123,12 @@ class Game():
         f.write("endActions\n")
         #End File Stuff
         f.close()
-        print "Save complete!"
+        #print "Save complete!"
     
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.exit_game()
-                #TODO: Activate the menu instead
-                
+                self.toggle_menu()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.toggle_menu()
@@ -137,10 +140,23 @@ class Game():
                 toSave = self.saveButton.mouse_event(event)
                 if toSave:
                     self.saveGame(self.saveName)
+                    self.toggle_menu()
             elif self.state == Game.POP_UP_MENU and(event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION):
                 toClose = self.closeButton.mouse_event(event)
                 if toClose:
                     self.toggle_menu()
+                #Save
+                toSave = self.menuSaveButton.mouse_event(event)
+                if toSave:
+                    self.saveGame(self.saveName)
+                #Main Menu
+                toMenu = self.menuMenuButton.mouse_event(event)
+                if toMenu:
+                    self.state = Game.QUIT_TO_MENU
+                #Quit Game
+                toQuit = self.menuQuitButton.mouse_event(event)
+                if toQuit:
+                    self.exit_game()
             #Map stuff (from test.py)
             if self.state == Game.NORMAL:
                 self.map_stuff(event)
@@ -150,10 +166,8 @@ class Game():
         #If the pop up is already on, deactivate
         if self.state == Game.POP_UP_MENU:
             self.state = Game.NORMAL
-            print "Menu Off"
         else:
             self.state = Game.POP_UP_MENU
-            print "Menu On"
     
     def map_stuff(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -197,7 +211,6 @@ class Game():
         #Check if any actions have finished
         for act in self.actionQueue:
             if act.isDone(self.currTime):
-                print "Removing an event"
                 self.actionQueue.remove(act)
     
     def draw(self):
@@ -205,7 +218,6 @@ class Game():
         #Whattup, it's a map!
         for x in self.map.grid:
             for y in x:
-                #print "x,y: ("+ repr(y.x)+","+repr(y.y)+")"
                 if y.state ==0:
                     self.screen.blit(self.open,y.rect)
                 elif y.state == 1:
@@ -248,13 +260,14 @@ class Game():
             #draw some menu stuff
             self.menuPanel.draw(self.screen)
             self.closeButton.draw(self.screen)
+            self.menuSaveButton.draw(self.screen)
+            self.menuMenuButton.draw(self.screen)
+            self.menuQuitButton.draw(self.screen)
     
     #Copied from main.py D:
     def exit_game(self):
         """Exits the game completely"""
-        #self.saveGame(self.saveName)
-        pygame.quit()
-        sys.exit()
+        self.state = Game.QUIT_GAME
     
     #Here Lie the Helper Functions:
     def getTimeStr(self, aTime):
@@ -289,7 +302,6 @@ class Game():
         return leStr
     
     def textToDateTime(self, text): #For loading datetimes
-        print "The text:%s"%text
         aList = text.rstrip().split(',')
         return datetime.datetime(int(aList[1]), int(aList[2]), int(aList[3]), int(aList[4]), int(aList[5]), int(aList[6]))
     

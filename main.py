@@ -57,7 +57,6 @@ class Main():
                 self.intro.draw()
                 pygame.display.flip()
                 if self.intro.doneYet:
-                    print "Intro Complete!"
                     self.state = Main.IN_GAME
                     self.game = Game(self.screen, None)
             elif self.state == Main.IN_GAME and self.game != None:
@@ -65,6 +64,11 @@ class Main():
                 self.game.update(self.msPassed)
                 self.game.draw()
                 pygame.display.flip()
+                #Check Game's state
+                if self.game.state == Game.QUIT_GAME:
+                    self.exit_game()
+                if self.game.state == Game.QUIT_TO_MENU:
+                    self.state = Main.MAIN_MENU
             else:
                 #Quit!
                 self.exit_game()
