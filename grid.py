@@ -6,9 +6,9 @@ class Node:
 	x = 0
 	y = 0
 	rect = 0
-	dimension = 0
+	width = 0
+	height = 0
 	name = ""
-	passable = False
 	state = 0
 	G = 999999999
 	F = 999999999
@@ -17,12 +17,12 @@ class Node:
 	
 	#States 0 = passable, 1 = impassable, 2 = start, 3 = end 4 = path
 	
-	def __init__(self,x,y,dimension,passable):
-		self.rect = (x,y,dimension,dimension)
+	def __init__(self,x,y,width,height):
+		self.rect = (x,y,width,height)
 		self.x = x
 		self.y = y
-		self.dimension = dimension
-		self.passable = passable
+		self.width = width
+		self.height = height
 	
 	def toggle(self,x):
 		if x > 0:

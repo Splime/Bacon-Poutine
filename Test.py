@@ -21,12 +21,12 @@ class Test():
 		self.screen = pygame.display.set_mode((self.windowX, self.windowY))
 		pygame.display.set_caption(self.windowName)
 		pygame.mouse.set_visible(True)
-		self.map = Map(640,640,32)
-		self.open = pygame.image.load("img/test/open.jpg").convert()
-		self.closed = pygame.image.load("img/test/closed.jpg").convert()
-		self.start = pygame.image.load("img/test/start.jpg").convert()
-		self.end = pygame.image.load("img/test/end.jpg").convert()
-		self.path = pygame.image.load("img/test/path.jpg").convert()
+		self.map = Map(1080,640,54,32)
+		self.open = pygame.image.load("img/test/openIso.png")
+		self.closed = pygame.image.load("img/test/closedIso.png")
+		self.start = pygame.image.load("img/test/startIso.png")
+		self.end = pygame.image.load("img/test/endIso.png")
+		self.path = pygame.image.load("img/test/pathIso.png")
 		
 	def run(self):
 		self.clock.tick()
