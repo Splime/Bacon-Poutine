@@ -9,6 +9,7 @@ from map import Map
 from grid import Node
 from aStar import AStar
 from object import Object
+from math import floor, tan, radians
 
 class Game():
 
@@ -46,12 +47,12 @@ class Game():
         #Guess what? It's a map, bitch
         self.startBlock = Node(0,0,0,0)
         self.endBlock = Node(0,0,0,0)
-        self.map = Map(640,640,32)
-        self.open = pygame.image.load("img/test/open.jpg").convert()
-        self.closed = pygame.image.load("img/test/closed.jpg").convert()
-        self.start = pygame.image.load("img/test/start.jpg").convert()
-        self.end = pygame.image.load("img/test/end.jpg").convert()
-        self.path = pygame.image.load("img/test/path.jpg").convert()
+        self.map = Map(540,128,54,32)
+        self.open = pygame.image.load("img/test/openIso.png")
+        self.closed = pygame.image.load("img/test/closedIso.png")
+        self.start = pygame.image.load("img/test/startIso.png")
+        self.end = pygame.image.load("img/test/endIso.png")
+        self.path = pygame.image.load("img/test/pathIso.png")
     
     #More Map code
     def swap(self,setSpecial,x):
@@ -177,31 +178,37 @@ class Game():
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse = pygame.mouse.get_pressed()
             if mouse[0]:
-                if event.pos[0] <640 and event.pos[0] >= 0 and event.pos[1]<640 and event.pos[1]>=0:
-                    x = int(event.pos[0]/32)
-                    y = int(event.pos[1]/32)
-                    self.map.grid[x][y].toggle(1)
-                    if self.startBlock.x == self.map.grid[x][y].x and self.startBlock.y == self.map.grid[x][y].y:
-                        self.startBlock = Node(0,0,0,0)
-                    if self.endBlock.x == self.map.grid[x][y].x and self.endBlock.y == self.map.grid[x][y].y:
-                        self.endBlock = Node(0,0,0,0)
-                    if self.map.grid[x][y].state == 2:
-                        self.swap(self.map.grid[x][y],1)
-                    if self.map.grid[x][y].state ==3:
-                        self.swap(self.map.grid[x][y],-1)
+                #print "("+repr(event.pos[0])+","+repr(event.pos[1])+")"
+                yPosition = int(floor((tan(radians(30)) * event.pos[0] + event.pos[1] + 16)/32))#Find position on y axis
+                xPosition = -1 *int(floor((tan(radians(-30)) * event.pos[0] + event.pos[1] + 16)/32))#Find position on x axis
+                print "Square: ("+repr(xPosition)+","+repr(yPosition)+")"
+                #print len(self.map.grid)
+                #print len(self.map.grid[0])
+                x = xPosition
+                y = yPosition
+                self.map.grid[x][y-1].toggle(1)
+                """
+                if self.startBlock.x == self.map.grid[x][y].x and self.startBlock.y == self.map.grid[x][y].y:
+                    self.startBlock = Node(0,0,0,0)
+                if self.endBlock.x == self.map.grid[x][y].x and self.endBlock.y == self.map.grid[x][y].y:
+                    self.endBlock = Node(0,0,0,0)
+                if self.map.grid[x][y].state == 2:
+                    self.swap(self.map.grid[x][y],1)
+                if self.map.grid[x][y].state ==3:
+                    self.swap(self.map.grid[x][y],-1)
+                """
             if mouse[2]:
-                if event.pos[0] <640 and event.pos[0] >= 0 and event.pos[1]<640 and event.pos[1]>=0:
-                    x = int(event.pos[0]/32)
-                    y = int(event.pos[1]/32)
-                    self.map.grid[x][y].toggle(-1)
-                    if self.startBlock.x == self.map.grid[x][y].x and self.startBlock.y == self.map.grid[x][y].y:
-                        self.startBlock = Node(0,0,0,0)
-                    if self.endBlock.x == self.map.grid[x][y].x and self.endBlock.y == self.map.grid[x][y].y:
-                        self.endBlock = Node(0,0,0,0)
-                    if self.map.grid[x][y].state == 2:
-                        self.swap(self.map.grid[x][y],1)
-                    if self.map.grid[x][y].state ==3:
-                        self.swap(self.map.grid[x][y],-1)
+                x = xPosition
+                y = yPosition
+                self.map.grid[x][y].toggle(-1)
+                if self.startBlock.x == self.map.grid[x][y].x and self.startBlock.y == self.map.grid[x][y].y:
+                    self.startBlock = Node(0,0,0,0)
+                if self.endBlock.x == self.map.grid[x][y].x and self.endBlock.y == self.map.grid[x][y].y:
+                    self.endBlock = Node(0,0,0,0)
+                if self.map.grid[x][y].state == 2:
+                    self.swap(self.map.grid[x][y],1)
+                if self.map.grid[x][y].state ==3:
+                    self.swap(self.map.grid[x][y],-1)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 path = AStar(self.map,self.startBlock,self.endBlock)
