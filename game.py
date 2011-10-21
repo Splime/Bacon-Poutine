@@ -26,6 +26,8 @@ class Game():
         self.gameBG = pygame.image.load("img/game_bg.png")
         self.botPanel = Object("img/ui/bottom_panel.png",512,self.windowY-64,1024,128)
         self.topLeft = Object("img/ui/top_left.png", 256,64,512,128)
+        self.topLeftRect1 = pygame.Rect(0,0,128,128)
+        self.topLeftRect2 = pygame.Rect(128,0,512-128,128)
         self.menuPanel = Object("img/ui/menu.png",self.windowX/2, self.windowY/2, 212,274)
         self.saveButton = ClickableButton("img/buttons/save80x32.png",self.windowX - 96, self.windowY - 64,80,32)
         self.closeButton = ClickableButton("img/buttons/close.png", self.menuPanel.rect.right-13, self.menuPanel.rect.top+13,17,17)
@@ -125,6 +127,9 @@ class Game():
         f.close()
         #print "Save complete!"
     
+    def mouseCollideWithUI(self, pt):
+        return self.botPanel.rect.collidepoint(pt) or self.topLeftRect1.collidepoint(pt) or self.topLeftRect2.collidepoint(pt)
+    
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -133,7 +138,6 @@ class Game():
                 if event.key == pygame.K_ESCAPE:
                     self.toggle_menu()
                 if event.key == pygame.K_F5:
-                    print "Quicksaving..."
                     self.saveGame(self.saveName)
             #Mouse Events
             elif self.state == Game.NORMAL and(event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION):
@@ -158,7 +162,7 @@ class Game():
                 if toQuit:
                     self.exit_game()
             #Map stuff (from test.py)
-            if self.state == Game.NORMAL:
+            if self.state == Game.NORMAL and not self.mouseCollideWithUI(event.pos):
                 self.map_stuff(event)
     
     def toggle_menu(self):
