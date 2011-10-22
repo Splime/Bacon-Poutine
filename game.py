@@ -17,9 +17,11 @@ class Game():
     QUIT_TO_MENU = -1
     NORMAL = 0
     POP_UP_MENU = 1
+    POP_UP_QUIT = 2
     
     def __init__(self, scr, toLoad):
         self.state = Game.NORMAL
+        self.quitState = Game.NORMAL
         self.screen = scr
         self.windowX = self.screen.get_width()
         self.windowY = self.screen.get_height()
@@ -29,12 +31,21 @@ class Game():
         self.topLeft = Object("img/ui/top_left.png", 256,64,512,128)
         self.topLeftRect1 = pygame.Rect(0,0,128,128)
         self.topLeftRect2 = pygame.Rect(128,0,512-128,64)
+        #Menu Panel
         self.menuPanel = Object("img/ui/menu.png",self.windowX/2, self.windowY/2, 212,274)
         self.saveButton = ClickableButton("img/buttons/save80x32.png",self.windowX - 96, self.windowY - 64,80,32)
         self.closeButton = ClickableButton("img/buttons/close.png", self.menuPanel.rect.right-13, self.menuPanel.rect.top+13,17,17)
         self.menuSaveButton = ClickableButton("img/buttons/save_game.png", self.menuPanel.x, self.menuPanel.rect.top+88,192,64)
         self.menuMenuButton = ClickableButton("img/buttons/quit_menu.png", self.menuPanel.x, self.menuPanel.rect.top+160,192,64)
         self.menuQuitButton = ClickableButton("img/buttons/quit_desktop.png", self.menuPanel.x, self.menuPanel.rect.top+232,192,64)
+        #Quit Dialog Panel
+        self.quitPanel = Object("img/ui/quit_menu.png",self.windowX/2, self.windowY/2, 212,274)
+        self.saveButton = ClickableButton("img/buttons/save80x32.png",self.windowX - 96, self.windowY - 64,80,32)
+        #Use the same close button
+        self.saveQuitButton = ClickableButton("img/buttons/save_quit.png", self.menuPanel.x, self.menuPanel.rect.top+88,192,64)
+        self.quitWOSaveButton = ClickableButton("img/buttons/quit_wo_save.png", self.menuPanel.x, self.menuPanel.rect.top+160,192,64)
+        self.cancelButton = ClickableButton("img/buttons/cancel.png", self.menuPanel.x, self.menuPanel.rect.top+232,192,64)
+        #More variables
         self.timeRatio = 60
         self.actionQueue = []
         #Load or New is important here
@@ -146,6 +157,7 @@ class Game():
                 if toSave:
                     self.saveGame(self.saveName)
                     self.toggle_menu()
+            #Dialog Menu
             elif self.state == Game.POP_UP_MENU and(event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION):
                 toClose = self.closeButton.mouse_event(event)
                 if toClose:
@@ -157,11 +169,28 @@ class Game():
                 #Main Menu
                 toMenu = self.menuMenuButton.mouse_event(event)
                 if toMenu:
-                    self.state = Game.QUIT_TO_MENU
+                    self.quitState = Game.QUIT_TO_MENU
+                    self.state = Game.POP_UP_QUIT
                 #Quit Game
                 toQuit = self.menuQuitButton.mouse_event(event)
                 if toQuit:
-                    self.exit_game()
+                    self.quitState = Game.QUIT_GAME
+                    self.state = Game.POP_UP_QUIT
+            #Quit Dialog
+            elif self.state == Game.POP_UP_QUIT and(event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION):
+                toClose = self.closeButton.mouse_event(event)
+                toCancel = self.cancelButton.mouse_event(event)
+                if toClose or toCancel:
+                    self.toggle_menu()
+                #Save & Quit
+                toSave = self.saveQuitButton.mouse_event(event)
+                if toSave:
+                    self.saveGame(self.saveName)
+                    self.state = self.quitState
+                #Quit w/o Save
+                toQuit = self.quitWOSaveButton.mouse_event(event)
+                if toQuit:
+                    self.state = self.quitState
             #Map stuff (from test.py)
             if self.state == Game.NORMAL and not (event.type == pygame.MOUSEBUTTONDOWN and self.mouseCollideWithUI(event.pos)):
                 self.map_stuff(event)
@@ -169,7 +198,7 @@ class Game():
     def toggle_menu(self):
         """Activates a menu pop-up for saving/quitting"""
         #If the pop up is already on, deactivate
-        if self.state == Game.POP_UP_MENU:
+        if self.state == Game.POP_UP_MENU or self.state == Game.POP_UP_QUIT:
             self.state = Game.NORMAL
         else:
             self.state = Game.POP_UP_MENU
@@ -274,6 +303,14 @@ class Game():
             self.menuSaveButton.draw(self.screen)
             self.menuMenuButton.draw(self.screen)
             self.menuQuitButton.draw(self.screen)
+        #Quit Dialog
+        if self.state == Game.POP_UP_QUIT:
+            #draw some menu stuff
+            self.quitPanel.draw(self.screen)
+            self.closeButton.draw(self.screen)
+            self.saveQuitButton.draw(self.screen)
+            self.quitWOSaveButton.draw(self.screen)
+            self.cancelButton.draw(self.screen)
     
     #Copied from main.py D:
     def exit_game(self):
