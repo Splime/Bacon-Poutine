@@ -145,7 +145,8 @@ class Game():
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.toggle_menu()
+                self.state = Game.POP_UP_QUIT
+                self.quitState = Game.QUIT_GAME
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.toggle_menu()
