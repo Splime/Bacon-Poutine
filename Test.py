@@ -21,7 +21,7 @@ class Test():
 		self.screen = pygame.display.set_mode((self.windowX, self.windowY))
 		pygame.display.set_caption(self.windowName)
 		pygame.mouse.set_visible(True)
-		self.map = Map(540,128,54,32)
+		self.map = Map(540,512,54,32)
 		self.open = pygame.image.load("img/test/openIso.png")
 		self.closed = pygame.image.load("img/test/closedIso.png")
 		self.start = pygame.image.load("img/test/startIso.png")
