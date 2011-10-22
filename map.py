@@ -22,10 +22,10 @@ class Map:
         self.tempW = 0
         self.columns = int(self.mapHeight/self.nodeHeight)
         print "Generating map"
+        #Anthony, y u no use comments? *insert rage face here*
         for x in range(0,3):
             temp = []
             while self.tempH < self.mapHeight and self.tempW < self.mapWidth:
-                print "tempH = %i and tempW = %i"%(self.tempH, self.tempW)
                 tempNode = Node(self.tempW,self.tempH,54,32)
                 temp.append(tempNode)
                 tempNode = Node(self.tempW+27,self.tempH+16,54,32)
