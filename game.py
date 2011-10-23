@@ -367,18 +367,30 @@ class Game():
     def actionToText(self, act): #For saving actions
         aStr = "%s^%s^actStart,%s^actDuration,%s^"%(act.type, act.desc, self.dateTimeToText(act.startTime), self.deltaToText(act.duration))
         #Now deal with params
-        if act.params == None:
+        if act.type == "testType":
             aStr += "None"
-        else:
-            #TODO
-            pass
+        elif act.type == "movement":
+            aStr += "None"
+        elif act.type == "scavenge":
+            aStr += "None"
+        elif act.type == "fortify":
+            aStr += "None"
+        elif act.type == "sweep":
+            aStr += "None"
         return aStr+"\n"
         
     def textToAction(self, text): #For loading actions
         aList = text.rstrip().split('^')
         #Before making our Action, deal with params
         paramarams = None
-        if aList[4] != "None":
-            #TODO
+        if aList[0] == "testType":
+            pass
+        elif aList[0] == "movement":
+            pass
+        elif aList[0] == "scavenge":
+            pass
+        elif aList[0] == "fortify":
+            pass
+        elif aList[0] == "sweep":
             pass
         return Action(aList[0], aList[1], self.textToDateTime(aList[2]), self.textToDelta(aList[3]), paramarams)
