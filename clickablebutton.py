@@ -18,12 +18,14 @@ class ClickableButton(Object):
         self.rect.center = (xPos, yPos)
         self.subrect = pygame.Rect(0, 0, self.rect.width, self.rect.height)
         self.state = ClickableButton.NORMAL
+        #self.sound = pygame.mixer.Sound("sound/click0.wav")
     
     def mouse_event(self, event):
         """btw, this method should return True if the button activates"""
         if event.type == pygame.MOUSEBUTTONUP:
             if self.rect.collidepoint(event.pos):
                 self.state = ClickableButton.NORMAL
+                #self.sound.play()
                 return True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):

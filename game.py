@@ -167,6 +167,7 @@ class Game():
                 toSave = self.menuSaveButton.mouse_event(event)
                 if toSave:
                     self.saveGame(self.saveName)
+                    self.toggle_menu()
                 #Main Menu
                 toMenu = self.menuMenuButton.mouse_event(event)
                 if toMenu:
