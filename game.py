@@ -27,6 +27,8 @@ class Game():
         self.windowY = self.screen.get_height()
         self.fillerFont = pygame.font.Font(None, 24)
         self.gameBG = pygame.image.load("img/game_bg.png")
+        self.gameBGTile = pygame.image.load("img/game_bg_tile.png")
+        self.gameBGTileRect = self.gameBGTile.get_rect()
         self.botPanel = Object("img/ui/bottom_panel.png",512,self.windowY-64,1024,128)
         self.topLeft = Object("img/ui/top_left.png", 256,64,512,128)
         self.topLeftRect1 = pygame.Rect(0,0,128,128)
@@ -79,10 +81,9 @@ class Game():
         self.startTime = datetime.datetime.now()
         self.currTime = self.startTime
         #Add test actions
-        self.actionQueue.append( Action("testType", "Testing the Action System...", self.startTime, datetime.timedelta(minutes=10), None) )
-        self.actionQueue.append( Action("testType", "Testing the Action System Again...", self.startTime, datetime.timedelta(minutes=20), None) )
-        self.actionQueue.append( Action("testType", "Testing the Action System Yet Again...", self.startTime, datetime.timedelta(minutes=15), None) )
-        self.actionQueue.append( Action("testType", "Testing the Action System Againnnnnn...", self.startTime, datetime.timedelta(minutes=30), None) )
+        self.actionQueue.append( Action("testType", "Poopalooping", self.startTime, datetime.timedelta(minutes=30), None) )
+        self.actionQueue.append( Action("testType", "Infecting Zombies", self.startTime, datetime.timedelta(hours=4), None) )
+        self.actionQueue.append( Action("testType", "Reticulating Splines", self.startTime, datetime.timedelta(days=7), None) )
     
     def loadGame(self, toLoad):
         #print "Loading game from %s..."%toLoad
@@ -254,7 +255,11 @@ class Game():
                 self.actionQueue.remove(act)
     
     def draw(self):
-        self.screen.blit(self.gameBG, pygame.Rect(0, 0, self.windowX, self.windowY))
+        #self.screen.blit(self.gameBG, pygame.Rect(0, 0, self.windowX, self.windowY))
+        for x in range(self.windowX/self.gameBGTileRect.width + self.gameBGTileRect.width):
+            for y in range(self.windowY/self.gameBGTileRect.height + self.gameBGTileRect.height):
+                self.screen.blit(self.gameBGTile, pygame.Rect(x*self.gameBGTileRect.width, y*self.gameBGTileRect.height, self.gameBGTileRect.width, self.gameBGTileRect.height))
+                
         #Whattup, it's a map!
         for x in self.map.grid:
             for y in x:
