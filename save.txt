@@ -1,7 +1,5 @@
-gametime,2011,10,22,22,40,6
-savetime,2011,10,22,22,18,34
+gametime,2011,10,23,13,46,30
+savetime,2011,10,22,22,33,40
 actions:
-testType^Poopalooping^actStart,2011,10,22,22,18,12^actDuration,0,1800,0^None
-testType^Infecting Zombies^actStart,2011,10,22,22,18,12^actDuration,0,14400,0^None
 testType^Reticulating Splines^actStart,2011,10,22,22,18,12^actDuration,7,0,0^None
 endActions
