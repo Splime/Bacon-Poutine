@@ -157,7 +157,6 @@ class Game():
                 toSave = self.saveButton.mouse_event(event)
                 if toSave:
                     self.saveGame(self.saveName)
-                    self.toggle_menu()
             #Dialog Menu
             elif self.state == Game.POP_UP_MENU and(event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION):
                 toClose = self.closeButton.mouse_event(event)
@@ -293,7 +292,7 @@ class Game():
             actStr = "%s : %s to go"%(act.desc, self.getDeltaStr(act.timeRemaining(self.currTime)))
             txtSurf = self.fillerFont.render(actStr, 1, (0, 0, 0))
             txtRect = txtSurf.get_rect()
-            txtRect.center = (512, self.windowY - 96 + 32*index)
+            txtRect.center = (512, self.windowY - 96 + 32*counter)
             self.screen.blit(txtSurf, txtRect)
             counter += 1
         #Pop-Up Menu
@@ -337,15 +336,16 @@ class Game():
     def getDeltaStr(self, dt):
         leStr = ""
         if dt.days > 0:
-            leStr += "%i days,"%dt.days
+            leStr += "%i day(s), "%dt.days
+        #print "dt.seconds/3600 = " + str(dt.seconds/3600) + " dt.seconds/60 = " + str(dt.seconds/60)
         if dt.seconds/3600 > 0:
             leStr += "%i:"%(dt.seconds/3600)
         else:
             leStr += "0:"
-        if dt.seconds/60 >= 10:
-            leStr += "%i"%(dt.seconds/60)
-        elif dt.seconds/60 > 0:
-            leStr += "0%i"%(dt.seconds/60)
+        if (dt.seconds/60)%60 >= 10:
+            leStr += "%i"%((dt.seconds/60)%60)
+        elif (dt.seconds/60)%60 > 0:
+            leStr += "0%i"%((dt.seconds/60)%60)
         else:
             leStr += "00"
         return leStr
@@ -362,6 +362,7 @@ class Game():
         return datetime.timedelta(int(aList[1]), int(aList[2]), int(aList[3]))
     
     def deltaToText(self, dlt): #For saving deltas
+        #print "dlt.days = %i, dlt.seconds = %i"%(dlt.days, dlt.seconds)
         return "%i,%i,%i"%(dlt.days, dlt.seconds, dlt.microseconds)
     
     def actionToText(self, act): #For saving actions
