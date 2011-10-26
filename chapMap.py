@@ -4,7 +4,7 @@ import pygame
 
 class CMap:
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, targetRect):
         self.grid = []
         for i in range(height):
             aRow = []
@@ -12,6 +12,9 @@ class CMap:
                 aRow.append(None)
             self.grid.append(aRow)
         self.tileImg = pygame.image.load("img/map/32sq.png")
+        self.tileX = self.tileImg.get_rect().width
+        self.tileY = self.tileImg.get_rect().height
+        self.targetRect = targetRect
     
     #A function to easily find what's at a specific location
     def get(self, x, y):
@@ -23,8 +26,8 @@ class CMap:
     def handle_event(self, event):
         pass
         
-    def draw(self, screen, targetRect):
+    def draw(self, screen):
         for i, row in enumerate(self.grid):
             for j, tile in enumerate(row):
                 if tile == None:
-                    screen.blit(self.tileImg, pygame.Rect(targetRect.left+j*32, targetRect.top+i*32, 32, 32))
+                    screen.blit(self.tileImg, pygame.Rect(self.targetRect.left+j*self.tileX, self.targetRect.top+i*self.tileY, self.tileX, self.tileY))
