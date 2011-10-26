@@ -1,5 +1,6 @@
-gametime,2011,10,26,2,55,21
-savetime,2011,10,26,2,37,19
-Chap^0^1
+gametime,2011,10,26,3,19,41
+savetime,2011,10,26,3,12,27
+Chap^8^9
 actions:
+movement^Moving to (4, 3)^actStart,2011,10,26,3,17,21^actDuration,0,432,666153^*8 9*4 3*&walking
 endActions

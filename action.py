@@ -13,7 +13,7 @@
 # movement: When the player moves from one tile to another.
 #           params[0] should be a path of tiles to go through,
 #           params[1] should be a string representing their method of moving (ie walking, bike, car, etc).
-#           The duration field can be None, since it is recalculated based on params[1]
+#           The duration field should be None to calculate based on params[1]
 #           After initialisation, self.path is the path, self.method is the method of transport.
 # scavenge: When the player is scavenging a tile for supplies.
 #           params[0] should be the location.

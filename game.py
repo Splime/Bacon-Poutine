@@ -119,6 +119,7 @@ class Game():
             anAction = self.textToAction(aLine)
             if anAction.isDone(self.currTime) == False:
                 self.actionQueue.append(anAction)
+                self.player.action = anAction
             aLine = f.readline()
         #At this point, aLine == "endActions\n"
         
@@ -375,7 +376,11 @@ class Game():
         if act.type == "testType":
             aStr += "None"
         elif act.type == "movement":
-            aStr += "None"
+            pathStr = ""
+            for tile in act.path:
+                pathStr += "*%i %i"%(tile[0], tile[1])
+            pathStr+="*"
+            aStr += "%s&%s"%(pathStr, act.method)
         elif act.type == "scavenge":
             aStr += "None"
         elif act.type == "fortify":
@@ -391,7 +396,18 @@ class Game():
         if aList[0] == "testType":
             pass
         elif aList[0] == "movement":
-            pass
+            paramarams = []
+            paramList = aList[4].split('&')
+            #First, append the path
+            thePathList = paramList[0].split('*')
+            thePath = []
+            for tile in thePathList:
+                if tile != "":
+                    coords = tile.split(' ')
+                    thePath.append((int(coords[0]), int(coords[1])))
+            paramarams.append(thePath)
+            #Then, append the method
+            paramarams.append(paramList[1])
         elif aList[0] == "scavenge":
             pass
         elif aList[0] == "fortify":
