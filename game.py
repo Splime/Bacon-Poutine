@@ -122,10 +122,7 @@ class Game():
                 self.player.action = anAction
             aLine = f.readline()
         #At this point, aLine == "endActions\n"
-        
-        #Generate new events based on time passed?
-        #TODO
-        
+
         #End File Stuff
         f.close()
         #print "Load complete!"
