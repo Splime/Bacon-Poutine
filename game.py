@@ -28,6 +28,7 @@ class Game():
         self.windowX = self.screen.get_width()
         self.windowY = self.screen.get_height()
         self.fillerFont = pygame.font.Font(None, 24)
+        self.filler16 = pygame.font.Font(None, 16)
         self.gameBG = pygame.image.load("img/game_bg.png")
         self.gameBGTile = pygame.image.load("img/game_bg_tile.png")
         self.gameBGTileRect = self.gameBGTile.get_rect()
@@ -247,11 +248,16 @@ class Game():
             if act.isStarted(self.currTime) == False:
                 continue
             actStr = "%s : %s to go"%(act.desc, self.getDeltaStr(act.timeRemaining(self.currTime)))
-            txtSurf = self.fillerFont.render(actStr, 1, (0, 0, 0))
+            txtSurf = self.filler16.render(actStr, 0, (0, 0, 0))
             txtRect = txtSurf.get_rect()
-            txtRect.center = (512, self.windowY - 96 + 32*counter)
+            txtRect.center = (self.windowX - 352, self.windowY - 96 + 32*counter)
             self.screen.blit(txtSurf, txtRect)
             counter += 1
+        #Display Player Name
+        nameStr = self.fillerFont.render(self.player.name, 1, (0, 0, 0))
+        nameRect = nameStr.get_rect()
+        nameRect.center = (64,64)
+        self.screen.blit(nameStr, nameRect)
         #Pop-Up Menu
         if self.state == Game.POP_UP_MENU:
             #draw some menu stuff

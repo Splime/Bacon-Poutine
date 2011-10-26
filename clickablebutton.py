@@ -25,7 +25,6 @@ class ClickableButton(Object):
         if event.type == pygame.MOUSEBUTTONUP:
             if self.rect.collidepoint(event.pos):
                 self.state = ClickableButton.NORMAL
-                #self.sound.play()
                 return True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
