@@ -10,8 +10,10 @@ class Player:
         self.pos = pos #pos[0] should be x, pos[1] should be y
         self.cmap = theMap
         self.img = pygame.image.load("img/map/plyr.png")
+        self.action = None
     
     def update(self, msPassed):
+        #Do stuff here like checking up on actions (e.g. updating position during movement)
         pass
         
     def draw(self, screen):

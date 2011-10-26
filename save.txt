@@ -1,5 +1,5 @@
-gametime,2011,10,26,2,4,44
-savetime,2011,10,26,1,56,21
-Chap^8^3
+gametime,2011,10,26,2,55,21
+savetime,2011,10,26,2,37,19
+Chap^0^1
 actions:
 endActions

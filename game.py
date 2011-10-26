@@ -59,7 +59,6 @@ class Game():
         self.cmapRect = pygame.Rect(0,0,480,480)
         self.cmapRect.center = (self.windowX/2, self.windowY/2-64)
         self.cmap = CMap(15,15,self.cmapRect)
-        #Player code
         #Load or New is important here
         if toLoad != None:
             self.loadGame(toLoad)
@@ -224,8 +223,11 @@ class Game():
         if self.cmap.selectedPos == None:
             print "Ruh Roh!"
             return
-        #Temp code: just change the player position
-        self.player.pos = self.cmap.selectedPos
+        #Create a movement action for this movement
+        someParams = [[self.player.pos, self.cmap.selectedPos], "walking"] #TODO: Make an actual path!
+        moveAct = Action("movement", "Moving to (%i, %i)"%(self.cmap.selectedPos[0], self.cmap.selectedPos[1]), self.currTime, None, someParams)
+        self.actionQueue.append(moveAct)
+        self.player.action = moveAct
         
     def update(self, msPassed):
         #Do something with the time (only if unpaused):
@@ -238,6 +240,8 @@ class Game():
                     self.actionQueue.remove(act)
         #Map stuff
         self.cmap.update(msPassed)
+        #Player
+        self.player.update(msPassed)
     
     def draw(self):
         #self.screen.blit(self.gameBG, pygame.Rect(0, 0, self.windowX, self.windowY))
