@@ -17,7 +17,7 @@ class Game():
 
     QUIT_GAME = -2
     QUIT_TO_MENU = -1
-    NORMAL = 0
+    NORMAL = 0 #All other modes count as paused!
     POP_UP_MENU = 1
     POP_UP_QUIT = 2
     
@@ -55,6 +55,11 @@ class Game():
         #More variables
         self.timeRatio = 60
         self.actionQueue = []
+        #Guess what? It's a map, bitch
+        self.cmapRect = pygame.Rect(0,0,480,480)
+        self.cmapRect.center = (self.windowX/2, self.windowY/2-64)
+        self.cmap = CMap(15,15,self.cmapRect)
+        #Player code
         #Load or New is important here
         if toLoad != None:
             self.loadGame(toLoad)
@@ -62,12 +67,6 @@ class Game():
         else:
             self.newGame()
             self.saveName = "save.txt"
-        #Guess what? It's a map, bitch
-        self.cmapRect = pygame.Rect(0,0,480,480)
-        self.cmapRect.center = (self.windowX/2, self.windowY/2-64)
-        self.cmap = CMap(15,15,self.cmapRect)
-        #Player code
-        self.player = Player("Chap", (0,1), self.cmap)
     
     #More Map code
     def swap(self,setSpecial,x):
@@ -82,6 +81,7 @@ class Game():
         #Set up the time
         self.startTime = datetime.datetime.now()
         self.currTime = self.startTime
+        self.player = Player("Chap", (0,1), self.cmap)
         #Add test actions
         #self.actionQueue.append( Action("testType", "Poopalooping", self.startTime, datetime.timedelta(minutes=30), None) )
         #self.actionQueue.append( Action("testType", "Infecting Zombies", self.startTime, datetime.timedelta(hours=4), None) )
@@ -105,6 +105,9 @@ class Game():
         saveTimeDiff = datetime.datetime.now() - prevSaveTime
         gameTimeDiff = saveTimeDiff * self.timeRatio
         self.currTime = prevGameTime #+ gameTimeDiff #Disabling time passing while offline, gameplay decision
+        #Now load up the player!
+        playerLine = f.readline().rstrip().split('^')
+        self.player = Player(playerLine[0], (int(playerLine[1]),int(playerLine[2])), self.cmap)
         #Load Actions/Fulfill based on time passed
         aLine = f.readline()
         if aLine != "actions:\n":
@@ -130,9 +133,12 @@ class Game():
     def saveGame(self, saveDest):
         #print "Saving game to %s..."%saveDest
         f = open(saveDest, 'w')
+        #Time stuff
         f.write("gametime,%s\n"%self.dateTimeToText(self.currTime))
         irlTime = datetime.datetime.now()
         f.write("savetime,%s\n"%self.dateTimeToText(irlTime))
+        #Player
+        f.write("%s^%i^%i\n"%(self.player.name, self.player.pos[0], self.player.pos[1]))
         #Actions
         f.write("actions:\n")
         for act in self.actionQueue:
@@ -222,13 +228,14 @@ class Game():
         self.player.pos = self.cmap.selectedPos
         
     def update(self, msPassed):
-        #Do something with the time:
-        timeDiff = datetime.timedelta(microseconds = self.timeRatio * msPassed * 1000)
-        self.currTime = self.currTime + timeDiff
-        #Check if any actions have finished
-        for act in self.actionQueue:
-            if act.isDone(self.currTime):
-                self.actionQueue.remove(act)
+        #Do something with the time (only if unpaused):
+        if self.state == Game.NORMAL:
+            timeDiff = datetime.timedelta(microseconds = self.timeRatio * msPassed * 1000)
+            self.currTime = self.currTime + timeDiff
+            #Check if any actions have finished
+            for act in self.actionQueue:
+                if act.isDone(self.currTime):
+                    self.actionQueue.remove(act)
         #Map stuff
         self.cmap.update(msPassed)
     
@@ -237,7 +244,6 @@ class Game():
         for x in range(self.windowX/self.gameBGTileRect.width + self.gameBGTileRect.width):
             for y in range(self.windowY/self.gameBGTileRect.height + self.gameBGTileRect.height):
                 self.screen.blit(self.gameBGTile, pygame.Rect(x*self.gameBGTileRect.width, y*self.gameBGTileRect.height, self.gameBGTileRect.width, self.gameBGTileRect.height))
-                
         #Whattup, it's a map!
         self.cmap.draw(self.screen)
         #Player
