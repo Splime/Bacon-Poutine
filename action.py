@@ -38,6 +38,7 @@ class Action:
         self.desc = desc
         self.startTime = startTime
         self.duration = duration
+        self.done = False #A variable so that we store the last call of isDone, to check the doneness
         #TestType
         if self.type == "testType":
             pass
@@ -66,7 +67,9 @@ class Action:
         
         
     def isDone(self, currTime):
-        return self.startTime + self.duration <= currTime
+        ans = self.startTime + self.duration <= currTime
+        self.done = ans
+        return ans
     
     def isStarted(self, currTime):
         return self.startTime < currTime

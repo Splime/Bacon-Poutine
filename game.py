@@ -226,6 +226,10 @@ class Game():
         #Create a movement action for this movement
         someParams = [[self.player.pos, self.cmap.selectedPos], "walking"] #TODO: Make an actual path!
         moveAct = Action("movement", "Moving to (%i, %i)"%(self.cmap.selectedPos[0], self.cmap.selectedPos[1]), self.currTime, None, someParams)
+        #Remove any previous movement actions
+        for act in self.actionQueue:
+            if act.type == "movement":
+                self.actionQueue.remove(act)
         self.actionQueue.append(moveAct)
         self.player.action = moveAct
         
