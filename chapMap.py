@@ -56,3 +56,21 @@ class CMap:
         for i, row in enumerate(self.gridUI):
             for j, tile in enumerate(row):
                 tile.draw(screen)
+    
+    def path_find(self, pos1, pos2):
+        thePath = []
+        #Now find a path from pos1 to pos2!
+        #Quick fix: go across, then down, ignore any obstacles
+        horiz = 1
+        if pos1[0] > pos2[0]:
+            horiz = -1
+        for i in range(pos1[0], pos2[0], horiz):
+            thePath.append((i, pos1[1]))
+        vert = 1
+        if pos1[1] > pos2[1]:
+            vert = -1
+        for j in range(pos1[1], pos2[1], vert):
+            thePath.append((pos2[0], j))
+        thePath.append(pos2)
+        return thePath
+        

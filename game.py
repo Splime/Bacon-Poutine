@@ -222,7 +222,7 @@ class Game():
             print "Ruh Roh!"
             return
         #Create a movement action for this movement
-        someParams = [[self.player.pos, self.cmap.selectedPos], "walking"] #TODO: Make an actual path!
+        someParams = [self.cmap.path_find(self.player.pos, self.cmap.selectedPos), "walking"]
         moveAct = Action("movement", "Moving to (%i, %i)"%(self.cmap.selectedPos[0], self.cmap.selectedPos[1]), self.currTime, None, someParams)
         #Remove any previous movement actions
         for act in self.actionQueue:
@@ -243,7 +243,7 @@ class Game():
         #Map stuff
         self.cmap.update(msPassed)
         #Player
-        self.player.update(msPassed)
+        self.player.update(msPassed, self.currTime)
     
     def draw(self):
         #self.screen.blit(self.gameBG, pygame.Rect(0, 0, self.windowX, self.windowY))
@@ -350,6 +350,13 @@ class Game():
             leStr += "0%i"%((dt.seconds/60)%60)
         else:
             leStr += "00"
+        #Seconds
+        if dt.seconds%60 >= 10:
+            leStr += ":%i"%(dt.seconds%60)
+        elif dt.seconds%60 > 0:
+            leStr += ":0%i"%(dt.seconds%60)
+        else:
+            leStr += ":00"
         return leStr
     
     def textToDateTime(self, text): #For loading datetimes

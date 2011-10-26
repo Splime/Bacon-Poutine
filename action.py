@@ -32,13 +32,14 @@ import datetime
 
 class Action:
     
+    WALKING_SPEED = 1.0 #tiles/minute
+    
     def __init__(self, type, desc, startTime, duration, params):
         """Actions are of different types, have a description, parameters based on type, and a start time and duration"""
         self.type = type
         self.desc = desc
         self.startTime = startTime
         self.duration = duration
-        self.done = False #A variable so that we store the last call of isDone, to check the doneness
         #TestType
         if self.type == "testType":
             pass
@@ -49,9 +50,9 @@ class Action:
             self.method = params[1]
             #Calculate the actual duration
             #Currently ignores method
-            tilesPerMinute = 1.0
-            distance = math.sqrt(math.fabs((self.path[1][0] - self.path[0][0])**2+(self.path[1][1] - self.path[0][1])**2))
-            self.duration = datetime.timedelta(minutes = distance/tilesPerMinute)
+            #distance = math.sqrt(math.fabs((self.path[len(self.path)-1][0] - self.path[0][0])**2+(self.path[len(self.path)-1][1] - self.path[0][1])**2))
+            distance = len(self.path) - 1
+            self.duration = datetime.timedelta(minutes = distance/Action.WALKING_SPEED)
         #Scavenging
         elif self.type == "scavenge":
             pass
@@ -67,9 +68,7 @@ class Action:
         
         
     def isDone(self, currTime):
-        ans = self.startTime + self.duration <= currTime
-        self.done = ans
-        return ans
+        return self.startTime + self.duration <= currTime
     
     def isStarted(self, currTime):
         return self.startTime < currTime
