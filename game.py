@@ -36,9 +36,11 @@ class Game():
         self.topLeft = Object("img/ui/top_left.png", 256,64,512,128)
         self.topLeftRect1 = pygame.Rect(0,0,128,128)
         self.topLeftRect2 = pygame.Rect(128,0,512-128,64)
+        #Some UI Buttons
+        self.saveButton = ClickableButton("img/buttons/save80x32.png",self.windowX - 96, self.windowY - 64,80,32)
+        self.moveButton = ClickableButton("img/buttons/move_here80x32.png",352, self.windowY - 32,80,32)
         #Menu Panel
         self.menuPanel = Object("img/ui/menu.png",self.windowX/2, self.windowY/2, 212,274)
-        self.saveButton = ClickableButton("img/buttons/save80x32.png",self.windowX - 96, self.windowY - 64,80,32)
         self.closeButton = ClickableButton("img/buttons/close.png", self.menuPanel.rect.right-13, self.menuPanel.rect.top+13,17,17)
         self.menuSaveButton = ClickableButton("img/buttons/save_game.png", self.menuPanel.x, self.menuPanel.rect.top+88,192,64)
         self.menuMenuButton = ClickableButton("img/buttons/quit_menu.png", self.menuPanel.x, self.menuPanel.rect.top+160,192,64)
@@ -81,9 +83,9 @@ class Game():
         self.startTime = datetime.datetime.now()
         self.currTime = self.startTime
         #Add test actions
-        self.actionQueue.append( Action("testType", "Poopalooping", self.startTime, datetime.timedelta(minutes=30), None) )
-        self.actionQueue.append( Action("testType", "Infecting Zombies", self.startTime, datetime.timedelta(hours=4), None) )
-        self.actionQueue.append( Action("testType", "Reticulating Splines", self.startTime, datetime.timedelta(days=7), None) )
+        #self.actionQueue.append( Action("testType", "Poopalooping", self.startTime, datetime.timedelta(minutes=30), None) )
+        #self.actionQueue.append( Action("testType", "Infecting Zombies", self.startTime, datetime.timedelta(hours=4), None) )
+        #self.actionQueue.append( Action("testType", "Reticulating Splines", self.startTime, datetime.timedelta(days=7), None) )
     
     def loadGame(self, toLoad):
         #print "Loading game from %s..."%toLoad
@@ -102,7 +104,7 @@ class Game():
         #Calculate the new game time!
         saveTimeDiff = datetime.datetime.now() - prevSaveTime
         gameTimeDiff = saveTimeDiff * self.timeRatio
-        self.currTime = prevGameTime + gameTimeDiff
+        self.currTime = prevGameTime #+ gameTimeDiff #Disabling time passing while offline, gameplay decision
         #Load Actions/Fulfill based on time passed
         aLine = f.readline()
         if aLine != "actions:\n":
@@ -158,6 +160,11 @@ class Game():
                 toSave = self.saveButton.mouse_event(event)
                 if toSave:
                     self.saveGame(self.saveName)
+                #Deal with the movement button
+                if self.cmap.selectedPos != None:
+                    toMove = self.moveButton.mouse_event(event)
+                    if toMove:
+                        self.move_player_to_selected()
             #Dialog Menu
             elif self.state == Game.POP_UP_MENU and(event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION):
                 toClose = self.closeButton.mouse_event(event)
@@ -204,6 +211,15 @@ class Game():
             self.state = Game.NORMAL
         else:
             self.state = Game.POP_UP_MENU
+    
+    def move_player_to_selected(self):
+        """Moves the player to the currently selected grid square"""
+        #Check for no selection
+        if self.cmap.selectedPos == None:
+            print "Ruh Roh!"
+            return
+        #Temp code: just change the player position
+        self.player.pos = self.cmap.selectedPos
         
     def update(self, msPassed):
         #Do something with the time:
@@ -230,6 +246,8 @@ class Game():
         self.botPanel.draw(self.screen)
         self.topLeft.draw(self.screen)
         self.saveButton.draw(self.screen)
+        if self.cmap.selectedPos != None:
+            self.moveButton.draw(self.screen)
         #Some code to display the time and date
         timeStr = self.getTimeStr(self.currTime)
         timeText1 = self.fillerFont.render(timeStr, 1, (0, 0, 0))
@@ -258,6 +276,15 @@ class Game():
         nameRect = nameStr.get_rect()
         nameRect.center = (64,64)
         self.screen.blit(nameStr, nameRect)
+        #Display info about the selected tile
+        if self.cmap.selectedPos == None:
+            selStr = "No Tile Selected! :("
+        else:
+            selStr = "(%i, %i) Selected"%(self.cmap.selectedPos[0], self.cmap.selectedPos[1])
+        selSurf = self.fillerFont.render(selStr, 1, (0, 0, 0))
+        selRect = selSurf.get_rect()
+        selRect.center = (352, self.windowY - 96)
+        self.screen.blit(selSurf, selRect)
         #Pop-Up Menu
         if self.state == Game.POP_UP_MENU:
             #draw some menu stuff
