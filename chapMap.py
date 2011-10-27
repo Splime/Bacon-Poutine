@@ -81,6 +81,6 @@ class CMap:
     
     #Helper Function, calculates display position based on x and y
     def calc_display(self, x, y):
-        base_pos = (self.targetRect.width/2, CMap.VERT_SHIFT) #Position for 0,0
+        base_pos = (self.targetRect.width/2 + self.targetRect.left, CMap.VERT_SHIFT + self.targetRect.top) #Position for 0,0
         return (base_pos[0] + x*CMap.HORIZ_SHIFT - y*CMap.HORIZ_SHIFT, base_pos[1] + x*CMap.VERT_SHIFT + y*CMap.VERT_SHIFT)
         
