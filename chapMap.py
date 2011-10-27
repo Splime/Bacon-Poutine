@@ -12,16 +12,16 @@ class CMap:
             for j in range(width):
                 aRow.append(None)
             self.grid.append(aRow)
-        self.tileImg = pygame.image.load("img/map/32sq.png")
-        self.tileX = self.tileImg.get_rect().width
-        self.tileY = self.tileImg.get_rect().height
+        self.tileImg = pygame.image.load("img/map/60x31iso.png")
+        self.tileX = self.tileImg.get_rect().width/2
+        self.tileY = self.tileImg.get_rect().height/3 - 1
         self.targetRect = targetRect
         #Grid UI: How the player interacts with this map
         self.gridUI = []
         for i in range(height):
             aRow = []
             for j in range(width):
-                aRow.append(GridIcon("img/map/32sqb.png", self.targetRect.left+j*self.tileX+16, self.targetRect.top+i*self.tileY+16, self.tileX, self.tileY))
+                aRow.append(GridIcon("img/map/60x31iso.png", self.targetRect.left+j*self.tileX+30, self.targetRect.top+i*self.tileY+15, self.tileX, self.tileY))
             self.gridUI.append(aRow)
         self.selection = None
         self.selectedPos = None
