@@ -57,9 +57,9 @@ class Game():
         self.timeRatio = 60
         self.actionQueue = []
         #Guess what? It's a map, bitch
-        self.cmapRect = pygame.Rect(0,0,1800,900)
-        self.cmapRect.center = (self.windowX/2, self.windowY/2-64)
-        self.cmap = CMap(15,15,self.cmapRect)
+        self.cmapRect = pygame.Rect(0,0,1080,540)
+        self.cmapRect.center = (self.windowX/2, self.windowY/2-32)
+        self.cmap = CMap(9,9,self.cmapRect)
         #Load or New is important here
         if toLoad != None:
             self.loadGame(toLoad)
