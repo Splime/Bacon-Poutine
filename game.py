@@ -208,7 +208,7 @@ class Game():
             if self.state == Game.NORMAL and (event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION):
                 if not(self.mouseCollideWithUI(event.pos)):
                     self.cmap.handle_event(event)
-                else:
+                elif self.cmap.lastHighlight != None:
                     self.cmap.lastHighlight.state = GridIcon.NORMAL
     
     def toggle_menu(self):

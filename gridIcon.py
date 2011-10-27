@@ -32,8 +32,10 @@ class GridIcon(ClickableButton):
         return results
     
     def draw(self, screen):
-        self.subrect.left = self.selected * self.rect.width
-        ClickableButton.draw(self, screen)
+        screenRect = pygame.Rect(0,0,1024,768)
+        if self.rect.colliderect(screenRect):
+            self.subrect.left = self.selected * self.rect.width
+            ClickableButton.draw(self, screen)
     
     #Overwrite Existing mouse_collide!
     def mouse_collide(self, pos):
