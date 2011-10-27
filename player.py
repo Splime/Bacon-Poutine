@@ -26,5 +26,7 @@ class Player:
                 self.action = None
         
     def draw(self, screen):
-        screen.blit(self.img, pygame.Rect(self.cmap.targetRect.left+self.cmap.tileX*self.pos[0], self.cmap.targetRect.top+self.cmap.tileY*self.pos[1],self.cmap.tileX,self.cmap.tileY))
+        plyrRect = pygame.Rect(0, 0,32,32)
+        plyrRect.center = self.cmap.calc_display(self.pos[0], self.pos[1])
+        screen.blit(self.img, plyrRect)
         

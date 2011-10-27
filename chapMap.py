@@ -4,6 +4,10 @@ import pygame
 from gridIcon import GridIcon
 
 class CMap:
+    
+    #Constants for isometrification
+    HORIZ_SHIFT = 30
+    VERT_SHIFT = 15
 
     def __init__(self, width, height, targetRect):
         self.grid = []
@@ -21,7 +25,8 @@ class CMap:
         for i in range(height):
             aRow = []
             for j in range(width):
-                aRow.append(GridIcon("img/map/60x31iso.png", self.targetRect.left+j*self.tileX+30, self.targetRect.top+i*self.tileY+15, self.tileX, self.tileY))
+                thePos = self.calc_display(j, i)
+                aRow.append(GridIcon("img/map/60x31iso.png", thePos[0], thePos[1], self.tileX, self.tileY))
             self.gridUI.append(aRow)
         self.selection = None
         self.selectedPos = None
@@ -73,4 +78,9 @@ class CMap:
             thePath.append((pos2[0], j))
         thePath.append(pos2)
         return thePath
+    
+    #Helper Function, calculates display position based on x and y
+    def calc_display(self, x, y):
+        base_pos = (self.targetRect.width/2, CMap.VERT_SHIFT) #Position for 0,0
+        return (base_pos[0] + x*CMap.HORIZ_SHIFT - y*CMap.HORIZ_SHIFT, base_pos[1] + x*CMap.VERT_SHIFT + y*CMap.VERT_SHIFT)
         
