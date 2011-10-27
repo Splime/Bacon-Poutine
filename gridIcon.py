@@ -13,6 +13,10 @@ class GridIcon(ClickableButton):
     UNSELECTED = 0
     SELECTED = 1
     
+    #Constants for isometrification
+    HORIZ_SHIFT = 30
+    VERT_SHIFT = 15
+    
     def __init__(self, imgLocation, xPos, yPos, width, height):
         ClickableButton.__init__(self, imgLocation, xPos, yPos, width, height)
         self.rect.width = self.rect.width / 2
@@ -30,3 +34,12 @@ class GridIcon(ClickableButton):
     def draw(self, screen):
         self.subrect.left = self.selected * self.rect.width
         ClickableButton.draw(self, screen)
+    
+    #Overwrite Existing mouse_collide!
+    def mouse_collide(self, pos):
+        diffX = pos[0]-self.x
+        diffY = pos[1]-self.y
+        if diffX > 0:
+            return diffY < -.5*diffX + GridIcon.VERT_SHIFT and diffY > .5*diffX - GridIcon.VERT_SHIFT
+        else:
+            return diffY < .5*diffX + GridIcon.VERT_SHIFT and diffY > -.5*diffX - GridIcon.VERT_SHIFT

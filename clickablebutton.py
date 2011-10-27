@@ -23,14 +23,14 @@ class ClickableButton(Object):
     def mouse_event(self, event):
         """btw, this method should return True if the button activates"""
         if event.type == pygame.MOUSEBUTTONUP:
-            if self.rect.collidepoint(event.pos):
+            if self.mouse_collide(event.pos):
                 self.state = ClickableButton.NORMAL
                 return True
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(event.pos):
+            if self.mouse_collide(event.pos):
                 self.state = ClickableButton.CLICKED
         elif event.type == pygame.MOUSEMOTION:
-            if self.rect.collidepoint(event.pos):
+            if self.mouse_collide(event.pos):
                 if self.state != ClickableButton.CLICKED:
                     self.state = ClickableButton.HIGHLIGHT
             else:
@@ -40,3 +40,6 @@ class ClickableButton(Object):
     def draw(self, screen):
         self.subrect.top = self.state * self.rect.height
         screen.blit(self.img, self.rect, self.subrect)
+    
+    def mouse_collide(self, pos):
+        return self.rect.collidepoint(pos)

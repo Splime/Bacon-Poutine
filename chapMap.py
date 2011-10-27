@@ -41,14 +41,20 @@ class CMap:
     def handle_event(self, event):
         newSelection = False
         newTile = None
-        for i,aRow in enumerate(self.gridUI):
-            for j,tile in enumerate(aRow):
+        #Count down from -15,-15 to 0,0
+        for i in range(len(self.gridUI)-1, -1, -1):
+            aRow = self.gridUI[i]
+            for j in range(len(aRow)-1, -1, -1):
+                tile = aRow[j]
                 result = tile.mouse_event(event)
                 #If a tile gets selected, make sure we unselect the last one
                 if result:
                     newSelection = True
                     newTile = tile
                     self.selectedPos = (j, i)
+                    break
+            if newSelection:
+                break
         #Now unselect all but selected
         if newSelection:
             #print "New Selection!"
