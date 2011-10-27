@@ -12,6 +12,7 @@ from object import Object
 from math import floor, tan, radians
 from chapMap import CMap
 from player import Player
+from gridIcon import GridIcon
 
 class Game():
 
@@ -56,7 +57,7 @@ class Game():
         self.timeRatio = 60
         self.actionQueue = []
         #Guess what? It's a map, bitch
-        self.cmapRect = pygame.Rect(0,0,900,450)
+        self.cmapRect = pygame.Rect(0,0,1800,900)
         self.cmapRect.center = (self.windowX/2, self.windowY/2-64)
         self.cmap = CMap(15,15,self.cmapRect)
         #Load or New is important here
@@ -204,8 +205,11 @@ class Game():
                 if toQuit:
                     self.state = self.quitState
             #Map stuff (from test.py)
-            if self.state == Game.NORMAL and not ((event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION) and self.mouseCollideWithUI(event.pos)):
-                self.cmap.handle_event(event)
+            if self.state == Game.NORMAL and (event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION):
+                if not(self.mouseCollideWithUI(event.pos)):
+                    self.cmap.handle_event(event)
+                else:
+                    self.cmap.lastHighlight.state = GridIcon.NORMAL
     
     def toggle_menu(self):
         """Activates a menu pop-up for saving/quitting"""

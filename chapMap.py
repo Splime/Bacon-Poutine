@@ -6,8 +6,8 @@ from gridIcon import GridIcon
 class CMap:
     
     #Constants for isometrification
-    HORIZ_SHIFT = 30
-    VERT_SHIFT = 15
+    HORIZ_SHIFT = 60
+    VERT_SHIFT = 30
 
     def __init__(self, width, height, targetRect):
         self.grid = []
@@ -16,7 +16,7 @@ class CMap:
             for j in range(width):
                 aRow.append(None)
             self.grid.append(aRow)
-        self.tileImg = pygame.image.load("img/map/60x31iso.png")
+        self.tileImg = pygame.image.load("img/map/120x61iso.png")
         self.tileX = self.tileImg.get_rect().width/2
         self.tileY = self.tileImg.get_rect().height/3 - 1
         self.targetRect = targetRect
@@ -26,10 +26,11 @@ class CMap:
             aRow = []
             for j in range(width):
                 thePos = self.calc_display(j, i)
-                aRow.append(GridIcon("img/map/60x31iso.png", thePos[0], thePos[1], self.tileX, self.tileY))
+                aRow.append(GridIcon("img/map/120x61iso.png", thePos[0], thePos[1], self.tileX, self.tileY))
             self.gridUI.append(aRow)
         self.selection = None
         self.selectedPos = None
+        self.lastHighlight = None
     
     #A function to easily find what's at a specific location
     def get(self, x, y):
@@ -48,6 +49,8 @@ class CMap:
                 tile = aRow[j]
                 result = tile.mouse_event(event)
                 #If a tile gets selected, make sure we unselect the last one
+                if tile.state != GridIcon.NORMAL:
+                    self.lastHighlight = tile
                 if result:
                     newSelection = True
                     newTile = tile

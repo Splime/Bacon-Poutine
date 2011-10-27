@@ -14,8 +14,8 @@ class GridIcon(ClickableButton):
     SELECTED = 1
     
     #Constants for isometrification
-    HORIZ_SHIFT = 30
-    VERT_SHIFT = 15
+    HORIZ_SHIFT = 60
+    VERT_SHIFT = 30
     
     def __init__(self, imgLocation, xPos, yPos, width, height):
         ClickableButton.__init__(self, imgLocation, xPos, yPos, width, height)
